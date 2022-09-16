@@ -5,7 +5,9 @@ import "primeicons/primeicons.css";
 
 function App() {
   return (
+    <div className="bg-gray-500">
     <Main />
+    </div>
   );
 }
 

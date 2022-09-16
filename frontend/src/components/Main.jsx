@@ -3,12 +3,11 @@ import Test from "./Test";
 import Home from "./Home";
 import NavBar from "./NavBar";
 import Inbox from "./Inbox";
-import Request from "./Request";
+import Request from "./Request Page/Request";
 
 const Main = () => {
   return (
     <>
-    <NavBar/>
     <BrowserRouter>
         <Switch>
             <Route path="/test" component={Test}/>

@@ -27,4 +27,16 @@ const createRequest = async (req, res)=>{
     }
 }
 
-module.exports = {getAllRequests, createRequest}
+const getReceivedRequests = async (req, res) => {
+    const user_addr = req.params.id
+    const requests = await Request.find({requestReceiver: user_addr})
+    res.send(requests)
+}
+
+const getSentRequests = async (req, res) => {
+    const user_addr = req.params.id
+    const requests = await Request.find({requestSender: user_addr})
+    res.send(requests)
+}
+
+module.exports = {getAllRequests, createRequest, getReceivedRequests, getSentRequests}

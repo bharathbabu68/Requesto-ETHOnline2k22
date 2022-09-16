@@ -19,6 +19,7 @@ connection.once("open", ()=>{
 
 //  import routers
 const requestRouter = require("./routes/requestRoutes")
+const nftRouter = require("./routes/nftRoutes")
 
 app.use(bodyparser.json());
 app.use(express.static("public"));
@@ -26,6 +27,7 @@ app.use(cors());
 app.use(logger)
 
 app.use("/api/requests", requestRouter)
+app.use("/api/nft", nftRouter)
 
 function logger(req, res, next) {
     console.log(`Calling ${req.method} ${req.url} with body: %o`, req.body)
