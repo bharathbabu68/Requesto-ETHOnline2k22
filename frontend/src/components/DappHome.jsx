@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap'
 import { Button } from 'primereact/button';
-import Request from "../components/Request/Request"
-import CreateRequest from './CreateRequest';
+import CreateRequest from "../components/Request/CreateRequest"
 
 const DappHome = () => {
     const [showInbox, setShowInbox] = useState(true)
