@@ -13,13 +13,13 @@ const RequestStep1 = ({completestep1}) => {
     <h2>Step 1</h2>
         <br />
         <div>
-        <h5>Enter Address of Receiver</h5>
-        <InputText placeholder="Enter Receiver Address" style={{width:"100%"}} value={value} onChange={(e) => setValue(e.target.value)} />
+        <h6>Enter Address of Receiver or ENS domain</h6>
+        <InputText placeholder="Enter Receiver Address or ENS domain" style={{width:"100%"}} value={value} onChange={(e) => setValue(e.target.value)} />
         </div>
         <div>
             <br />
             <br />
-        <h5>Choose Request Type</h5>
+        <h6>Choose Request Type</h6>
         <RadioButton value="NFT" onChange={(e) => setRequestType(e.value)} checked={requestType === 'NFT'} />
         <label style={{marginLeft:"10px", marginRight:"20px"}} >NFT</label>
         <RadioButton value="Crypto" onChange={(e) => setRequestType(e.value)} checked={requestType === 'Crypto'} />
@@ -27,8 +27,8 @@ const RequestStep1 = ({completestep1}) => {
         </div>
         <br />
         <br />
-        <Button label="Proceed" onClick={()=>{
-            completestep1(value, requestType)
+        <Button label="Proceed" onClick={async ()=>{
+            await completestep1(value, requestType)
         }}/>
     </>
   )

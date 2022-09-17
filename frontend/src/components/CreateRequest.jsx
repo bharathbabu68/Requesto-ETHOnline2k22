@@ -9,6 +9,7 @@ import RequestStep2Crypto from './RequestStep2Crypto';
 import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { ethers } from 'ethers'
+import axios from "axios";
  
 
 const CreateRequest = () => {
@@ -19,21 +20,20 @@ const CreateRequest = () => {
     const [step3Status, setStep3Status] = useState(false)
     
     const [fetchNFTStuff, setFetchNFTStuff] = useState(false)
-    const [nftResponse, setNftResponse] = useState([])
+    const [fetchNFTStatus, setFetchNFTStatus] = useState("Fetching NFTs from Receiver's Address")
+    
+    const [nftResponseEthereum, setNftResponseEthereum] = useState()
+    const [nftResponsePolygon, setNftResponsePolygon] = useState()
 
-    async function fetchNFTData(receiverAddress, chain) {
-
-        await fetch(`http://localhost:4000/api/nft/owned/${receiverAddress}/${chain}`,{
+    const fetchNFTData = async (receiverAddress, chain) => {
+        const response = await fetch(`http://localhost:4000/api/nft/owned/${receiverAddress}/${chain}`,{
         method: 'GET',
         headers: {
             'Content-Type' : 'application/json'
         }
-        }).then((response)=>{
-            console.log(response)
-            response.json()
-        }).then((response)=>{
-            setNftResponse(response)
         })
+        const data = await response.json()
+        return data
     }
 
 
@@ -42,14 +42,28 @@ const CreateRequest = () => {
         setReceiverAddress(receiverAddress1)
         setRequestType(requestType)
         var isValidAddress =  ethers.utils.isAddress(receiverAddress1)
-        if(!isValidAddress) {
-            alert("Invalid Address")
+        // check if address is a valid address
+        // check if ens domain
+        const provider = new ethers.providers.JsonRpcProvider("https://rpc.ankr.com/eth");
+        var address = await provider.resolveName(receiverAddress1);
+        
+        if(!isValidAddress && !address) {
+            alert("Invalid Address / ENS domain")
             return
         }
+
+        receiverAddress1 = address
+        
         if(requestType=='NFT'){
             setFetchNFTStuff(true)
-            await fetchNFTData(receiverAddress1, 'ethereum')
-            console.log(nftResponse)
+            var ethereum_nft_data = await fetchNFTData(receiverAddress1, 'ethereum')
+            var polygon_nft_data = await fetchNFTData(receiverAddress1, 'polygon')
+            if(ethereum_nft_data.length==0 && polygon_nft_data.length==0){
+                setFetchNFTStatus("No NFTs found for this address")
+                return
+            }
+            setNftResponseEthereum(ethereum_nft_data)
+            setNftResponsePolygon(polygon_nft_data)
             setFetchNFTStuff(false)
         }
         setStep1Status(true)
@@ -59,8 +73,8 @@ const CreateRequest = () => {
     <>
     
     <Dialog header="Fetching NFTs of your Receiver" visible={fetchNFTStuff} style={{ width: '30vw' }} onHide={() => setFetchNFTStuff(false)}>
-    <p>Fetching NFTs of {receiverAddress}, please wait !</p>
-    <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"/>
+    <p>{fetchNFTStatus}</p>
+    {fetchNFTStatus!="No NFTs found for this address" && <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"/>}
     </Dialog>
 
 
@@ -69,7 +83,7 @@ const CreateRequest = () => {
         <hr />
         {!step1Status  && <RequestStep1 completestep1={completeStep1}/>}
 
-        {requestType=="NFT" && step1Status && !step2Status && <RequestStep2NFT />}
+        {requestType=="NFT" && step1Status && !step2Status && <RequestStep2NFT receiver_address={receiverAddress} nftResponseEthereum={nftResponseEthereum} nftResponsePolygon={nftResponsePolygon} />}
 
         {requestType=="Crypto" && step1Status && !step2Status && <RequestStep2Crypto />}
 
