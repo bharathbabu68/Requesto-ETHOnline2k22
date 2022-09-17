@@ -29,6 +29,10 @@ app.use(logger)
 app.use("/api/requests", requestRouter)
 app.use("/api/nft", nftRouter)
 
+app.get("/", (req, res) => {
+    res.send("Hello World")
+})
+
 function logger(req, res, next) {
     console.log(`Calling ${req.method} ${req.url} with body: %o`, req.body)
     next()

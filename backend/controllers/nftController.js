@@ -16,19 +16,21 @@ const getOwnedNfts = async (req, res) => {
       fetch(`https://api.nftport.xyz/v0/accounts/${account_address}?chain=${chain}`, options)
         .then(response => response.json())
         .then(response => {
-            const nfts = response['nfts']
-            nfts.map(nft => {
-                var obj = {
-                    "contract_address": nft.contract_address,
-                    "token_id": nft.token_id,
-                    "chain": chain
-                }
-                result.push(obj)
-            })
+            console.log(response)
+            res.send(response)
+            // const nfts = response['nfts']
+            // nfts.map(nft => {
+            //     var obj = {
+            //         "contract_address": nft.contract_address,
+            //         "token_id": nft.token_id,
+            //         "chain": chain
+            //     }
+            //     result.push(obj)
+            // })
         })
-        .then(response => {
-            res.send(result)
-        })
+        // .then(response => {
+        //     res.send(result)
+        // })
         .catch(err => console.error(err));
 }
 
