@@ -8,9 +8,8 @@ import { Dialog } from 'primereact/dialog';
 import { Image } from 'primereact/image';
 
 
-const RequestStep2NFT = ({nftResponseEthereum, nftResponsePolygon, receiver_address}) => {
+const RequestStep2NFT = ({nftResponseEthereum, nftResponsePolygon, receiver_address, completeStep2NFT}) => {
 
-  var receiver_address = "0xE6D5514b8De7ef9E5F5c4cc2E8cA0207129DEB65"
   const [nftContractAddress, setNftContractAddress] = useState('')
   const [nftTokenId, setNftTokenId] = useState('')
   const [chain, setChain] = useState('')
@@ -50,14 +49,17 @@ const RequestStep2NFT = ({nftResponseEthereum, nftResponsePolygon, receiver_addr
       console.log(nftDetails.owner)
       console.log(receiver_address)
       if(nftDetails.owner.toLowerCase() !=receiver_address.toLowerCase() ){
-        alert("The NFT is not owned by the receiver address")
-        return
+        if(nftDetails.owner == "0x0000000000000000000000000000000000000000"){
+          alert("Could not fetch owner details. Please verify that your receiver owns this NFT !")
+        }
+        else{
+          alert("The NFT is not owned by the receiver address")
+          return
+        }
       }
-      else{
-        // alert("NFT Details verified and owned by the owner")
-        setImageMetaData(nftDetails.metadata_url)
-        setShowConfirmationModal(true)
-      }
+      // alert("NFT Details verified and owned by the owner")
+      setImageMetaData(nftDetails.metadata_url)
+      setShowConfirmationModal(true)
     }
     else{
       alert(nftDetails["error"].message)
@@ -78,21 +80,20 @@ const RequestStep2NFT = ({nftResponseEthereum, nftResponsePolygon, receiver_addr
     <p>Marketplaces Link to this NFT: <a href={`https://opensea.io/assets/${chain=="ethereum"?"ethereum":"matic"}/${nftContractAddress}/${nftTokenId}`}>Opensea</a> , <a href={`https://rarible.com/token/${chain=="polygon"?"polygon/":""}${nftContractAddress}:${nftTokenId}?tab=overview`}>Rarible</a></p>
     </Col>
     <Col md={3}>
-    <h6>NFT Metadata</h6>
+    <a href={imageMetaData}><h6>NFT Metadata</h6></a>
     <Image width="140" src={imageMetaData} alt="Image Text" />
     </Col>
     </Row>
     <Row style={{textAlign:"center", marginLeft:"4%"}}>
     <Col md={12}>
-    <Button label="Confirm and Proceed" onClick={() => setShowConfirmationModal(false)} />
+    <Button label="Confirm and Proceed" onClick={() => completeStep2NFT(nftContractAddress, nftTokenId, chain, imageMetaData)} />
     </Col>
     </Row>
-     {/* <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"/> */}
     </Dialog>
 
 
 
-    <h2>Step 2 for NFTs</h2>
+    <h2>Step 2</h2>
     <p>Your Receiver owns {nftResponseEthereum.length==50 ? "more than 50" : nftResponseEthereum.length} NFTs on <a href={`https://etherscan.io/address/${receiver_address}`}>Ethereum</a>, {nftResponsePolygon.length==50 ? "more than 50": nftResponsePolygon.length} NFTs on <a href={`https://polygonscan.com/address/${receiver_address}`}>Polygon</a></p>
     <br />
     <h6>Choose Chain where you wish to request the NFT from</h6>

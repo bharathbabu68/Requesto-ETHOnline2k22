@@ -52,8 +52,8 @@ const getNftDetails = (req, res) => {
           if(response.response=="OK"){
           var result ={
             "response": response.response,
-            "metadata_url": response['nft']['metadata'].image_url,
-            "owner": response['owner']
+            "metadata_url": response['nft']['metadata'].image_url ? response['nft']['metadata'].image_url : response['nft']['metadata'].image,
+            "owner": response['owner']? response['owner'] : "0x0000000000000000000000000000000000000000",
           }
           res.send(result)
         }
