@@ -1,4 +1,5 @@
 const Request = require("../models/request")
+const ethers = require("ethers")
 
 const getAllRequests = async (req, res)=>{
     const requests = await Request.find({})
@@ -8,19 +9,62 @@ const getAllRequests = async (req, res)=>{
 
 const createRequest = async (req, res)=>{
     try {
-        const newRequest = new Request({
-            requestType: req.body.requestType,
-            requestSender: req.body.requestSender,
-            requestReceiver: req.body.requestReceiver,
-            chosenChain: req.body.chosenChain,
-            chosenToken: req.body.chosenToken ? req.body.chosenToken: "null",
-            amount: req.body.amount,
-            nftData: req.body.nftData ? req.body.nftData: "null",
-            requestSignature: req.body.requestSignature,
-            requestStatus: "null"
-        })
-        await newRequest.save()
-        res.send("Request sent successfully !")
+        if(req.body.requestType == 1){
+            // this is a NFT request
+
+            // validate signature
+            const signature = req.body.requestSignature
+            const data = await fetch(req.body.nftData)
+            const data_json = await data.json()
+            const message = JSON.stringify(data_json)
+            console.log("Message: ", message)
+            let abi = [
+                "function verifyString(string, uint8, bytes32, bytes32) public pure returns (address)"
+            ];
+            let contractAddress = "0x949D1EC16b59749a7d1D886e837AdAf6C9Ab3055"
+            const provider = new ethers.providers.JsonRpcProvider("https://rpc.ankr.com/polygon_mumbai");
+            let contract = new ethers.Contract(contractAddress, abi, provider);
+            let sig = ethers.utils.splitSignature(signature);
+            let recovered = await contract.verifyString(message, sig.v, sig.r, sig.s);
+            console.log("Recovered: ", recovered)
+            if(recovered != req.body.requestSender){
+                console.log(recovered)
+                console.log(req.body.requestSender)
+                res.send("Invalid signature")
+                return
+            }
+            else{
+                console.log("Signature is valid")
+            }
+
+
+            const newRequest = new Request({
+                requestType: req.body.requestType,
+                requestSender: req.body.requestSender,
+                requestReceiver: req.body.requestReceiver,
+                nftData: req.body.nftData,
+                requestSignature: req.body.requestSignature,
+                requestStatus: "sent"
+            })
+            await newRequest.save()
+            res.send("NFT request sent")
+        }
+        else if(req.body.requestType == 2){
+            // this is a payment request
+            const newRequest = new Request({
+                requestType: req.body.requestType,
+                requestSender: req.body.requestSender,
+                requestReceiver: req.body.requestReceiver,
+                paymentData: req.body.paymentData,
+                requestSignature: req.body.requestSignature,
+                requestStatus: "sent"
+            })
+            await newRequest.save()
+            res.send("Payment request sent")
+        }
+        else{
+            res.send("Invalid request type")
+        }
     }
     catch(err){
         console.error(err)

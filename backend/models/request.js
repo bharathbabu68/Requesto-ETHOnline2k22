@@ -15,19 +15,11 @@ const requestSchema = new Schema({
         type: String,
         required: true,
     },
-    chosenChain: {
-        type: Number,
-        required: true,
-    },
-    chosenToken: {
-        type: String
-    },
-    amount: {
-        type: String
+    paymentData: {
+        type: String,
     },
     nftData: {
         type: String,
-        required: true,
     },
     requestSignature: {
         type: String,
@@ -35,7 +27,6 @@ const requestSchema = new Schema({
     },
     requestStatus: {
         type: String,
-        required: true,
     }
 
 })
