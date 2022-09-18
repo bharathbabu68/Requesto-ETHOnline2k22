@@ -1,5 +1,6 @@
 const Request = require("../models/request")
 const ethers = require("ethers")
+require("dotenv").config()
 
 const getAllRequests = async (req, res)=>{
     const requests = await Request.find({})
@@ -21,8 +22,8 @@ const createRequest = async (req, res)=>{
             let abi = [
                 "function verifyString(string, uint8, bytes32, bytes32) public pure returns (address)"
             ];
-            let contractAddress = "0x949D1EC16b59749a7d1D886e837AdAf6C9Ab3055"
-            const provider = new ethers.providers.JsonRpcProvider("https://rpc.ankr.com/polygon_mumbai");
+            let contractAddress = process.env.SIGNATURE_VERIFIER_CONTRACT_ADDRESS
+            const provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_TESTNET_INFURA_ENDPOINT);
             let contract = new ethers.Contract(contractAddress, abi, provider);
             let sig = ethers.utils.splitSignature(signature);
             let recovered = await contract.verifyString(message, sig.v, sig.r, sig.s);
