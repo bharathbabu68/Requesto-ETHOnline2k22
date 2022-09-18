@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap'
 import { Button } from 'primereact/button';
 import CreateRequest from "../components/Request/CreateRequest"
+import Inbox from "../components/Inbox"
 
 const DappHome = () => {
     const [showInbox, setShowInbox] = useState(true)
@@ -12,7 +13,7 @@ const DappHome = () => {
     const [createRequestButtonBorder, setCreateRequestButtonBorder] = useState("none")
 
   return (
-    <Container id='dapp-home' fluid style={{height:"880px"}}>
+    <Container id='dapp-home' fluid style={{height:"1000px"}}>
         <Row style={{padding:"1%"}}>
         <Col md={10}>
             <Row>
@@ -62,9 +63,8 @@ const DappHome = () => {
       }} label="Connect Wallet" className="p-button-rounded p-button-sm" />
       </Col>
       </Row>
-      <h2 style={{textAlign:"center", marginTop:"30px", color:"white"}}>Create and Send Your Request in 3 Steps </h2>
       <div style={{color:"white", textAlign:"center", margin:"7%", marginTop:"1%", paddingTop:"2%", paddingBottom:"2%"}}>
-        {showInbox && <h3 style={{}}>Inbox</h3>}
+        {showInbox && <Inbox />}
         {showSent && <h3>Sent Requests</h3>}
         {showCreateRequest && <CreateRequest />}
       </div>
