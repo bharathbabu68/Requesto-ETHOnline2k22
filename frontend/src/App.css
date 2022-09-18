@@ -37,3 +37,51 @@
     transform: rotate(360deg);
   }
 }
+
+input.ui-inputfield
+{
+    width : 50px !important;
+
+}
+
+.pi {
+  padding: 5px !important;
+}
+
+#inbox {
+  background: #780206;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #424ea8, #b7575a);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #48508d, #552829); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+#card {
+  
+  background:linear-gradient(135deg, #2e266e 0%,#7b2189 100%);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  
+}
+
+#req-card {
+  background:linear-gradient(135deg, #2e266e 0%,#7b2189 100%);
+  /* background-color: #120b1a; */
+/* opacity: 0.8; */
+/* background-image: radial-gradient(circle at center center, #02c7ff, #120b1a), repeating-radial-gradient(circle at center center, #02c7ff, #02c7ff, 10px, transparent 20px, transparent 10px); */
+background-blend-mode: multiply;
+}
+
+.box {
+  background-color: red;
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.3s ease-in-out;
+  transition: transform 0.2s ease-in-out;
+}
+
+.box:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+  transform: scale(1.02);
+  cursor: pointer;
+}

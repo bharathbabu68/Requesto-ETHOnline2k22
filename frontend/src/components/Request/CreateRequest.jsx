@@ -125,6 +125,10 @@ const CreateRequest = ({provider, signer}) => {
     <p>{fetchNFTStatus}</p>
     {fetchNftLoader && <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"/>}
     </Dialog>
+
+    <h2 style={{textAlign:"center", marginTop:"30px", color:"white"}}>Create and Send Your Request in 3 Steps </h2>
+    <br></br>
+
     
 
     <Container id="create-request" fluid style={{color:"black",border: "1px solid white", padding:"2%", width:"50%", borderRadius:"30px"}}>

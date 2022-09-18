@@ -4,8 +4,9 @@ import "primereact/resources/primereact.min.css";                  //core css
 import "primeicons/primeicons.css";   
 
 function App() {
+
   return (
-    <div className="bg-gray-500">
+    <div>
     <Main />
     </div>
   );
