@@ -3,10 +3,28 @@ import { Container, Row, Col } from 'react-bootstrap'
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Image } from 'primereact/image';
+import { create as ipfsHttpClient } from 'ipfs-http-client'
 
 const RequestStep3NFT = ({receiver_address, nftContractAddress, nftTokenId, chain, tokenMetadata, provider, signer}) => {
   
   const [additionalMessage, setAdditionalMessage] = useState('')
+
+  async function sendNFTRequest(){
+    if(!signer && !provider){
+      alert("Please connect your wallet")
+      return
+    }
+    var content_to_sign = {
+      "receiver_address": receiver_address,
+      "nft_contract_address": nftContractAddress,
+      "nft_token_id": nftTokenId,
+      "chain": chain,
+      "additional_message": additionalMessage,
+      "token_metadata": tokenMetadata
+    }
+    const signature = await signer.signMessage(JSON.stringify(content_to_sign))
+    console.log(signature)
+  }
 
   return (
     <>
@@ -32,13 +50,7 @@ const RequestStep3NFT = ({receiver_address, nftContractAddress, nftTokenId, chai
       </Container>
       <br />
       <Button label="Confirm and Send" onClick={async ()=>{
-        if(signer){
-          const signature = await signer.signMessage(`{'receiver_address':'receiver_address','nftContractAddress':'nftContractAddress','nftTokenId':'nftTokenId','chain':'chain'}`)
-          console.log(signature)
-        }
-        else{
-          console.log("Wallet not connected ")
-        }
+        sendNFTRequest()
       }} />
     </>
   )

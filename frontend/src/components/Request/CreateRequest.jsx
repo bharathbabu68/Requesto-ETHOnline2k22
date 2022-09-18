@@ -11,6 +11,7 @@ import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { ethers } from 'ethers'
 import axios from "axios";
+import { create as ipfsHttpClient } from 'ipfs-http-client'
  
 
 const CreateRequest = ({provider, signer}) => {
@@ -31,6 +32,16 @@ const CreateRequest = ({provider, signer}) => {
     const [chosenNftTokenId, setChosneNftTokenId] = useState()
     const [chosenChain, setChosenChain] = useState()
     const [chosenNftMetadataUrl, setChosenNftMetadataUrl] = useState()
+
+    const auth = 'Basic ' + Buffer.from(process.env.REACT_APP_INFURA_IPFS_PROJECT_ID + ':' + process.env.REACT_APP_INFURA_IPFS_SECRET_KEY).toString('base64')
+    const client = ipfsHttpClient({
+        host: 'ipfs.infura.io',
+        port: 5001,
+        protocol: 'https',
+        headers: {
+            authorization: auth
+        }
+    })
 
     const fetchNFTData = async (receiverAddress, chain) => {
         const response = await fetch(`http://localhost:4000/api/nft/owned/${receiverAddress}/${chain}`,{
@@ -91,6 +102,21 @@ const CreateRequest = ({provider, signer}) => {
 
   return (
     <>
+    <h1>IPFS ADD TEST</h1>
+    <Button label="Confirm and Send" onClick={async ()=>{
+        var data_to_add = {
+            "name": "test",
+            "description": "test",
+            "image": "test"
+        }
+        const added = await client.add(JSON.stringify(data_to_add))
+        const cid = added.path
+        const gateway_url = (process.env.REACT_APP_IPFS_GATEWAY) + cid
+        const data = await fetch(gateway_url)
+        const data_json = await data.json()
+        console.log(data_json)
+
+      }} />
     
     <Dialog header="Fetching NFTs of your Receiver" visible={fetchNFTStuff} style={{ width: '30vw' }} onHide={() => {
         setFetchNFTStatus("Fetching NFTs from Ethereum and Polygon")
