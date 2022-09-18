@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap'
 import { Button } from 'primereact/button';
 import CreateRequest from "../components/Request/CreateRequest"
+import NotificationDetails from "../components/NotificationDetails"
 import Inbox from "../components/Inbox"
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
@@ -11,6 +12,8 @@ const DappHome = () => {
     const [showInbox, setShowInbox] = useState(true)
     const [showSent, setShowSent] = useState(false)
     const [showCreateRequest, setShowCreateRequest] = useState(false)
+    const [showNotificationDetails, setShowNotificationDetails] = useState(false)
+    const [requestId, setRequestId] = useState(false)
     const [inboxButtonBorder, setInboxButtonBorder] = useState("3px solid white")
     const [sentButtonBorder, setSentButtonBorder] = useState("none")
     const [createRequestButtonBorder, setCreateRequestButtonBorder] = useState("none")
@@ -37,19 +40,30 @@ const DappHome = () => {
       console.log("Account Connected", account)
     }
 
+    function showDetailedNotification(requestID) {
+      if(!signer){
+        alert("Please Connect Wallet!")
+        return;
+      }
+      setRequestId(requestID)
+      setShowInbox(false)
+      setShowNotificationDetails(true)
+    }
+
   return (
     <Container id='dapp-home' fluid style={{height:"1000px"}}>
         <Row style={{padding:"1%"}}>
         <Col md={10}>
             <Row>
             <Col md={3}>
-            <h3 style={{fontWeight:"bold", color:"white", paddingTop:"10px"}}>Requesto</h3>
+            <h3 style={{fontWeight:"bold", color:"white", paddingTop:"10px"}}>Request<font style={{color: "#8442f5"}}>io</font></h3>
             </Col>
             <Col md={9} style={{paddingTop:"10px", textAlign:"left"}}>
                 <Row>
                 <Col md={4} style={{color: "white"}}>
             <Button style={{height:"50px", width:"150px", borderRadius:"0px",border:"none", borderBottom:`${inboxButtonBorder}`}} onClick={()=>{
                 setShowInbox(true)
+                setShowNotificationDetails(false)
                 setShowSent(false)
                 setShowCreateRequest(false)
                 setInboxButtonBorder("1px solid white")
@@ -90,9 +104,10 @@ const DappHome = () => {
       </Col>
       </Row>
       <div style={{color:"white", textAlign:"center", margin:"7%", marginTop:"1%", paddingTop:"2%", paddingBottom:"2%"}}>
-        {showInbox && <Inbox />}
+        {showInbox && <Inbox toggleDetailedView={showDetailedNotification} />}
         {showSent && <h3>Sent Requests</h3>}
         {showCreateRequest && <CreateRequest provider={provider} signer={signer}/>}
+        {showNotificationDetails && <NotificationDetails signer={signer} requestID={requestId} />}
       </div>
     </Container>
   )

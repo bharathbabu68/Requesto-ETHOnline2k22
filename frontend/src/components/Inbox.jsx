@@ -9,7 +9,7 @@ import { Avatar } from 'primereact/avatar';
 import { Row, Col, Container, Button } from 'react-bootstrap';
 import { SelectButton } from 'primereact/selectbutton';
 
-const Inbox = () => {
+const Inbox = ({toggleDetailedView}) => {
 
   const [countries, setCountries] = useState([]);
   const [selectedCountry2, setSelectedCountry2] = useState(null);
@@ -79,7 +79,7 @@ const Inbox = () => {
 
   const cryptoCard = () =>  {
     return (
-      <div class="box" style={{height: "170px", width: "93%", borderRadius: "10px", margin: "auto auto"}} id="req-card" className="card justify-content-center align-items-center">
+      <div onClick={toggleDetailedView} style={{height: "170px", width: "93%", borderRadius: "10px", margin: "auto auto"}} id="req-card" className="card box justify-content-center align-items-center">
         <Row className="mt-1">
 
           <Col md={2} style={{height: "100%", margin: "auto 0"}}>
