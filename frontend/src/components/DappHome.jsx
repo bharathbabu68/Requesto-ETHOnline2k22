@@ -3,6 +3,9 @@ import { Container, Row, Col } from 'react-bootstrap'
 import { Button } from 'primereact/button';
 import CreateRequest from "../components/Request/CreateRequest"
 import Inbox from "../components/Inbox"
+import { ethers } from 'ethers'
+import Web3Modal from 'web3modal'
+import { providerOptions } from './Web3Modal/providerOptions';
 
 const DappHome = () => {
     const [showInbox, setShowInbox] = useState(true)
@@ -11,6 +14,28 @@ const DappHome = () => {
     const [inboxButtonBorder, setInboxButtonBorder] = useState("3px solid white")
     const [sentButtonBorder, setSentButtonBorder] = useState("none")
     const [createRequestButtonBorder, setCreateRequestButtonBorder] = useState("none")
+
+    const [provider, setProvider] = useState()
+    const [signer, setSigner] = useState()
+    const [address, setAddress] = useState()
+
+    const web3Modal = new Web3Modal({
+      network: "mainnet", // optional
+      cacheProvider: true, // optional
+      providerOptions
+    });
+
+    async function connectWallet() {
+      const connection = await web3Modal.connect()
+      const provider = new ethers.providers.Web3Provider(connection)
+      console.log("Provider", provider)
+      const signer = provider.getSigner()
+      const account = await signer.getAddress()
+      setProvider(provider)
+      setSigner(signer)
+      setAddress(account)
+      console.log("Account Connected", account)
+    }
 
   return (
     <Container id='dapp-home' fluid style={{height:"1000px"}}>
@@ -60,13 +85,14 @@ const DappHome = () => {
       </Col>
       <Col md={2} style={{paddingTop:"10px", textAlign:"right"}}>
       <Button onClick = {()=>{
+        connectWallet()
       }} label="Connect Wallet" className="p-button-rounded p-button-sm" />
       </Col>
       </Row>
       <div style={{color:"white", textAlign:"center", margin:"7%", marginTop:"1%", paddingTop:"2%", paddingBottom:"2%"}}>
         {showInbox && <Inbox />}
         {showSent && <h3>Sent Requests</h3>}
-        {showCreateRequest && <CreateRequest />}
+        {showCreateRequest && <CreateRequest provider={provider} signer={signer}/>}
       </div>
     </Container>
   )
