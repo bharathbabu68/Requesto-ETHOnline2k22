@@ -25,13 +25,23 @@ const createRequest = async (req, res)=>{
             let contractAddress = process.env.SIGNATURE_VERIFIER_CONTRACT_ADDRESS
             const provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_TESTNET_INFURA_ENDPOINT);
             let contract = new ethers.Contract(contractAddress, abi, provider);
-            let sig = ethers.utils.splitSignature(signature);
+            // let sig = ethers.utils.splitSignature(signature);
+            let sig;
+            try {
+                sig = ethers.utils.splitSignature(signature);
+            }
+            catch (err) {
+                res.status(400)
+                res.send("Signature Validation Failed - Invalid Signature")
+            }
+            console.log("For wrong signature - Signature: ", sig)
             let recovered = await contract.verifyString(message, sig.v, sig.r, sig.s);
             console.log("Recovered: ", recovered)
             if(recovered != req.body.requestSender){
                 console.log(recovered)
                 console.log(req.body.requestSender)
-                res.send("Invalid signature")
+                res.status(400);
+                res.send("Signature Validation Failed - Invalid Sender")
                 return
             }
             else{
@@ -64,6 +74,7 @@ const createRequest = async (req, res)=>{
             res.send("Payment request sent")
         }
         else{
+            res.status(400);
             res.send("Invalid request type")
         }
     }

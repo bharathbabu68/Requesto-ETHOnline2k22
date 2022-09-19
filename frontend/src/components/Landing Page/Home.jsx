@@ -1,7 +1,7 @@
 import React from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import { Button } from 'primereact/button';
-import DappHome from './DappHome';
+import DappHome from '../DappHome';
 
 const Home = () => {
   return (

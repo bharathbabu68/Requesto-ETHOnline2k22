@@ -65,6 +65,9 @@ const RequestStep3NFT = ({receiver_address, nftContractAddress, nftTokenId, chai
           "nftData": data_url,
           "requestSignature": signature
     })})
+    console.log("Printing response details")
+    console.log(response)
+    console.log(response.status)
     setShowDialog(false)
     console.log("Request sent")
 
