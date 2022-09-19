@@ -10,8 +10,6 @@ const Main = () => {
     <>
     <BrowserRouter>
         <Switch>
-            <Route path="/test" component={Test}/>
-            <Route path="/inbox" component={Inbox}/>
             <Route path="/app" component={DappHome}/>
              <Route path="/" component={Home}/>
         </Switch>
