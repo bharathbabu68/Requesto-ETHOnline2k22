@@ -48,7 +48,7 @@ const RequestStep3NFT = ({receiver_address, nftContractAddress, nftTokenId, chai
     }
     setDialogStatus("Uploading your message contents to IPFS")
     const added = await client.add(JSON.stringify(content_to_sign))
-    setDialogStatus("Finishing up sending your request, hold on !")
+    setDialogStatus("Notifying your receiver using EPNS !")
     const cid = added.path
     const data_url = (process.env.REACT_APP_IPFS_GATEWAY) + cid
     console.log(data_url)
@@ -65,12 +65,10 @@ const RequestStep3NFT = ({receiver_address, nftContractAddress, nftTokenId, chai
           "nftData": data_url,
           "requestSignature": signature
     })})
-    console.log("Printing response details")
-    console.log(response)
-    console.log(response.status)
-    setShowDialog(false)
-    console.log("Request sent")
-
+    if(response.status === 200){
+      setDialogStatus("Request sent successfully !")
+      setShowSpinner(false)
+    }
   }
 
   return (

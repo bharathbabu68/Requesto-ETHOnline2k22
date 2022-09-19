@@ -1,5 +1,6 @@
 const Request = require("../models/request")
 const ethers = require("ethers")
+const notificationController = require("../controllers/notificationController")
 require("dotenv").config()
 
 const getAllRequests = async (req, res)=>{
@@ -18,7 +19,6 @@ const createRequest = async (req, res)=>{
             const data = await fetch(req.body.nftData)
             const data_json = await data.json()
             const message = JSON.stringify(data_json)
-            console.log("Message: ", message)
             let abi = [
                 "function verifyString(string, uint8, bytes32, bytes32) public pure returns (address)"
             ];
@@ -34,21 +34,11 @@ const createRequest = async (req, res)=>{
                 res.status(400)
                 res.send("Signature Validation Failed - Invalid Signature")
             }
-            console.log("For wrong signature - Signature: ", sig)
             let recovered = await contract.verifyString(message, sig.v, sig.r, sig.s);
-            console.log("Recovered: ", recovered)
             if(recovered != req.body.requestSender){
-                console.log(recovered)
-                console.log(req.body.requestSender)
                 res.status(400);
                 res.send("Signature Validation Failed - Invalid Sender")
-                return
             }
-            else{
-                console.log("Signature is valid")
-            }
-
-
             const newRequest = new Request({
                 requestType: req.body.requestType,
                 requestSender: req.body.requestSender,
@@ -58,6 +48,8 @@ const createRequest = async (req, res)=>{
                 requestStatus: "sent"
             })
             await newRequest.save()
+            var opensea_link = `https://opensea.io/assets/${data_json.chain=="ethereum"?"ethereum":"matic"}/${data_json.nft_contract_address}/${data_json.nft_token_id}`
+            notificationController.sendTargetedNotificationNFT("NFT", req.body.requestReceiver, data_json.nft_contract_address, data_json.nft_token_id, opensea_link, data_json.token_metadata)
             res.send("NFT request sent")
         }
         else if(req.body.requestType == 2){
