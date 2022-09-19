@@ -57,7 +57,6 @@ const RequestStep2NFT = ({nftResponseEthereum, nftResponsePolygon, receiver_addr
           return
         }
       }
-      // alert("NFT Details verified and owned by the owner")
       setImageMetaData(nftDetails.metadata_url)
       setShowConfirmationModal(true)
     }
@@ -93,7 +92,7 @@ const RequestStep2NFT = ({nftResponseEthereum, nftResponsePolygon, receiver_addr
 
 
 
-    <h2>Step 2</h2>
+    <h3>NFT Request - Step 2</h3>
     <p>Your Receiver owns {nftResponseEthereum.length==50 ? "more than 50" : nftResponseEthereum.length} NFTs on <a href={`https://etherscan.io/address/${receiver_address}`}>Ethereum</a>, {nftResponsePolygon.length==50 ? "more than 50": nftResponsePolygon.length} NFTs on <a href={`https://polygonscan.com/address/${receiver_address}`}>Polygon</a></p>
     <br />
     <h6>Choose Chain where you wish to request the NFT from</h6>

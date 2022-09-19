@@ -4,10 +4,10 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { Image } from 'primereact/image';
+// import { Image } from 'primereact/image';
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 
-const RequestStep3NFT = ({receiver_address, nftContractAddress, nftTokenId, chain, tokenMetadata, provider, signer}) => {
+const RequestStep3NFT = ({receiver_address, nftContractAddress, nftTokenId, chain, tokenMetadata, provider, signer, completeStep3}) => {
   
   const [additionalMessage, setAdditionalMessage] = useState('')
   const [showDialog, setShowDialog] = useState(false)
@@ -31,6 +31,11 @@ const RequestStep3NFT = ({receiver_address, nftContractAddress, nftTokenId, chai
     }
     setShowDialog(true)
     setShowSpinner(true)
+    // if token metadata starts with data:image/png then add it to ipfs and get the hash
+    if(!tokenMetadata  || tokenMetadata.startsWith("data:image/png")){
+      tokenMetadata = process.env.REACT_APP_IPFS_GATEWAY + "QmdUCaqRiN5R6WfJBMJrAwtW7iFD9R87kqby9jeG8ZjGzj"
+      console.log(tokenMetadata)
+    }
     var content_to_sign = {
       "nft_contract_address": nftContractAddress,
       "nft_token_id": nftTokenId,
@@ -68,6 +73,8 @@ const RequestStep3NFT = ({receiver_address, nftContractAddress, nftTokenId, chai
     if(response.status === 200){
       setDialogStatus("Request sent successfully !")
       setShowSpinner(false)
+      setShowDialog(false)
+      completeStep3()
     }
   }
 
@@ -81,7 +88,7 @@ const RequestStep3NFT = ({receiver_address, nftContractAddress, nftTokenId, chai
     {showSpinner && <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"/>}
     </Dialog>
       <Container>
-      <h2>Step 3</h2>
+      <h3>NFT Request - Step 3</h3>
       <br />
       <h6>Confirm your NFT Request details and sign your notification</h6>
       <Row style={{textAlign:"center", margin:"2%"}}>
@@ -98,7 +105,7 @@ const RequestStep3NFT = ({receiver_address, nftContractAddress, nftTokenId, chai
       </Row>
       <br />
       <h6>Enter any additional message if any for receiver</h6>
-      <InputText placeholder="Enter additional message for receiver" style={{width:"100%"}} value={additionalMessage} onChange={(e) =>       setAdditionalMessage(e.target.value)} />
+      <InputText placeholder="Enter additional message for receiver" style={{width:"100%"}} value={additionalMessage} onChange={(e) => setAdditionalMessage(e.target.value)} />
       </Container>
       <br />
       <Button label="Confirm and Send" onClick={async ()=>{
