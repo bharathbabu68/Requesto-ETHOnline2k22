@@ -178,6 +178,53 @@ const createBatchRequests = async (req, res)=>{
     }
 }
 
+const rejectNftRequest = async (req, res)=>{
+    try {
+
+        // verify signature
+        const signature = req.body.requestSignature
+        const requestId = req.body.requestId
+        const message = req.body.message
+        const nft_contract_address = req.body.nft_contract_address
+        const nft_token_id = req.body.nft_token_id
+        const chain = req.body.chain
+        let abi = [
+            "function verifyString(string, uint8, bytes32, bytes32) public pure returns (address)"
+        ];
+        let contractAddress = process.env.SIGNATURE_VERIFIER_CONTRACT_ADDRESS
+        const provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_TESTNET_INFURA_ENDPOINT);
+        let contract = new ethers.Contract(contractAddress, abi, provider);
+        // let sig = ethers.utils.splitSignature(signature);
+        let sig;
+        try {
+            sig = ethers.utils.splitSignature(signature);
+        }
+        catch (err) {
+            res.status(400)
+            res.send("Signature Validation Failed - Invalid Signature")
+        }
+        let recovered = await contract.verifyString(message, sig.v, sig.r, sig.s);
+        if(recovered != req.body.requestReceiver){
+            res.status(400);
+            res.send("Signature Validation Failed - Invalid Sender")
+        }
+
+
+        notificationController.sendTargetedNotificationRejectNFT(nft_contract_address, nft_token_id, chain, req.body.requestReceiver, req.body.requestSender)
+
+
+        // delete document with id request_id from db
+        await Request.deleteOne({_id: requestId})
+
+        res.send("Request rejected successfully")
+
+
+    }
+    catch(err){
+        console.error(err)
+    }
+}
+
 const getReceivedRequests = async (req, res) => {
     const user_addr = req.params.id
     const requests = await Request.find({requestReceiver: user_addr})
@@ -190,4 +237,4 @@ const getSentRequests = async (req, res) => {
     res.send(requests)
 }
 
-module.exports = {getAllRequests, createRequest, getReceivedRequests, getSentRequests, createBatchRequests}
+module.exports = {getAllRequests, createRequest, getReceivedRequests, getSentRequests, createBatchRequests, rejectNftRequest}

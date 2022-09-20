@@ -13,10 +13,16 @@ const UserInbox = ({provider, signer}) => {
   const [showLoadingInboxDialog, setShowLoadingInboxDialog] = useState(false)
   const [currentlySelectedRequestType, setCurrentlySelectedRequestType] = useState("nft")
   const [userAddressValue, setUserAddressValue] = useState("")
+  const [deleted, setDeleted] = useState(0)
 
   useEffect(() => {
     getAllUserRequests()
-  }, [])
+  }, [deleted])
+
+
+  async function ReloadComponentWhenDeleted() {
+    setDeleted(deleted + 1)
+  }
 
   // This function is called in UseEffect
   async function getAllUserRequests() {
@@ -102,13 +108,13 @@ const UserInbox = ({provider, signer}) => {
     {/* render NFT requests */}
     {!showLoadingInboxDialog && currentlySelectedRequestType=="nft" && userNftRequests.length>0 && userNftRequests.map((request, index) => {
       return (
-        <NFTRequestCard key={index} request={request} provider={provider} signer={signer} address={userAddressValue} />
+        <NFTRequestCard key={index} request={request} provider={provider} signer={signer} address={userAddressValue} ReloadComponentWhenDeleted={ReloadComponentWhenDeleted} />
       )
     })}
 
 {!showLoadingInboxDialog && currentlySelectedRequestType=="crypto" && userNftRequests.length>0 && userCryptoRequests.map((request, index) => {
       return (
-        <CryptoRequestCard key={index} request={request} provider={provider} signer={signer} address={userAddressValue} />
+        <CryptoRequestCard key={index} request={request} provider={provider} signer={signer} address={userAddressValue} ReloadComponentWhenDeleted={ReloadComponentWhenDeleted} />
       )
     })}
 

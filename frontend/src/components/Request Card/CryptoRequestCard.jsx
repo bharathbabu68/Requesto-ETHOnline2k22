@@ -1,8 +1,47 @@
-import React from 'react'
+import { useState } from 'react';
 import { Button } from 'primereact/button';
+import { ethers } from 'ethers'
+import { networkParams } from '../../networkParams';
+import { toHex } from '../../utils';
 
 const CryptoRequestCard = ({request, provider, signer, address}) => {
-  async function TransferCrypto() {
+  const [loadingTransferStatus, setLoadingTransferStatus] = useState(false)
+
+  async function TransferCrypto(sender, amount, chain) {
+    var required_chain_id;
+    if(chain=="ethereum")
+      required_chain_id = 1
+    else if(chain=="polygon")
+      required_chain_id = 137
+    const network = await provider.getNetwork()
+    // check user chain matches req chain
+    if(network.chainId != required_chain_id){
+      try {
+        await provider.provider.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: toHex(required_chain_id) }]
+        });
+      }
+      catch(switchError){
+        console.error(switchError)
+        // if user doesn't have the network in his wallet, let's add it to his wallet
+        if (switchError.code === 4902) {
+          try {
+            await provider.provider.request({
+              method: "wallet_addEthereumChain",
+              params: [networkParams[toHex(required_chain_id)]]
+            });
+          } catch (err) {
+            console.error(err)
+          }
+        }
+        else{
+          console.error(switchError)
+          setLoadingTransferStatus(false)
+          return
+        }
+      }
+    }
 
   }
 
