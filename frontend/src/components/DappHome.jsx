@@ -3,7 +3,8 @@ import { Container, Row, Col } from 'react-bootstrap'
 import { Button } from 'primereact/button';
 import CreateRequest from "../components/Request/CreateRequest"
 import NotificationDetails from "../components/NotificationDetails"
-import Inbox from "../components/Inbox"
+import UserInbox from './Inbox/UserInbox';
+import UserSent from './Sent/UserSent';
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
 import { providerOptions } from './Web3Modal/providerOptions';
@@ -86,7 +87,7 @@ const DappHome = () => {
     }
 
   return (
-    <Container id='dapp-home' fluid style={{height:"1000px"}}>
+    <Container id='dapp-home' fluid style={{minHeight:"1000px", overflow:"hidden"}}>
         <Row style={{padding:"1%"}}>
         <Col md={10}>
             <Row>
@@ -139,8 +140,10 @@ const DappHome = () => {
       </Col>
       </Row>
       <div style={{color:"white", textAlign:"center", margin:"7%", marginTop:"1%", paddingTop:"2%", paddingBottom:"2%"}}>
-        {showInbox && <Inbox toggleDetailedView={showDetailedNotification} />}
-        {showSent && <h3>Sent Requests</h3>}
+        {signer && showInbox && <UserInbox provider={provider} signer={signer}/>}
+        {showInbox && !signer && <h3 style={{marginTop:"10%"}}>Please Connect Wallet to view Inbox</h3>}
+        {signer && showSent && <UserSent provider={provider} signer={signer}/>}
+        {showSent && !signer && <h3 style={{marginTop:"10%"}}>Please Connect Wallet to view Sent Requests</h3>}
         {showCreateRequest && <CreateRequest provider={provider} signer={signer}/>}
         {showNotificationDetails && <NotificationDetails signer={signer} requestID={requestId} />}
       </div>

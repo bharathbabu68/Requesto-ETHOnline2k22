@@ -97,9 +97,9 @@ const RequestStep2NFT = ({nftResponseEthereum, nftResponsePolygon, receiver_addr
     <br />
     <h6>Choose Chain where you wish to request the NFT from</h6>
     <RadioButton value="ethereum" onChange={(e) => setChain(e.value)} checked={chain === 'ethereum'} />
-    <label style={{marginLeft:"10px", marginRight:"20px"}} >Ethereum</label>
+    <label style={{marginLeft:"10px", marginRight:"20px"}} >Ethereum Mainnet</label>
     <RadioButton value="polygon" onChange={(e) => setChain(e.value)} checked={chain === 'polygon'} />
-    <label style={{marginLeft:"10px"}} >Polygon</label>
+    <label style={{marginLeft:"10px"}} >Polygon Mainnet</label>
     <br />
     <br />
     <div>
