@@ -8,6 +8,8 @@ import UserSent from './Sent/UserSent';
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
 import { providerOptions } from './Web3Modal/providerOptions';
+import { networkParams } from '../networkParams';
+import { toHex } from '../utils'
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 
 const DappHome = () => {
@@ -51,6 +53,37 @@ const DappHome = () => {
         }
       })
       if(!already_subscribed){
+        const network = await provider.getNetwork()
+        if(network.chainId != 42){
+          var required_chain_id = 42
+          if(network.chainId != required_chain_id){
+            try {
+              await provider.provider.request({
+                method: "wallet_switchEthereumChain",
+                params: [{ chainId: toHex(required_chain_id) }]
+              });
+            }
+            catch(switchError){
+              console.error(switchError)
+              // if user doesn't have the network in his wallet, let's add it to his wallet
+              if (switchError.code === 4902) {
+                try {
+                  await provider.provider.request({
+                    method: "wallet_addEthereumChain",
+                    params: [networkParams[toHex(required_chain_id)]]
+                  });
+                } catch (err) {
+                  console.error(err)
+                }
+              }
+              else{
+                console.error(switchError)
+                return
+              }
+            }
+          }
+          
+        }
         await EpnsAPI.channels.subscribe({
           signer: _signer,
           channelAddress: `eip155:42:${process.env.REACT_APP_EPNS_CHANNEL_ADDR}`,
@@ -66,7 +99,7 @@ const DappHome = () => {
         })
       }
       if(!already_subscribed){
-        alert("Please subscribe to the channel to receieve notifications. Requesto uses EPNS as a communication protocol to deliver notifications and subscription is a one time event to receive notifications. ")
+        alert("Please subscribe to the channel to receieve notifications. Requesto uses EPNS as a communication protocol to deliver notifications and subscription is a one time event to receive notifications. Opt-ins happen through the Kovan Testnet ")
         return
       }
       setConnectWalletStatus("Connected: " + account_trimmed)

@@ -4,7 +4,6 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
-
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 
 const RequestStep3SingleCrypto = ({cryptoReqReceiverAddress, cryptoReqChain, cryptoReqAmount, provider, signer, completeStep3}) => {

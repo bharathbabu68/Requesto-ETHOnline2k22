@@ -12,6 +12,7 @@ const UserInbox = ({provider, signer}) => {
   const [userCryptoRequests, setUserCryptoRequests] = useState([])
   const [showLoadingInboxDialog, setShowLoadingInboxDialog] = useState(false)
   const [currentlySelectedRequestType, setCurrentlySelectedRequestType] = useState("nft")
+  const [userAddressValue, setUserAddressValue] = useState("")
 
   useEffect(() => {
     getAllUserRequests()
@@ -25,6 +26,7 @@ const UserInbox = ({provider, signer}) => {
     }
     setShowLoadingInboxDialog(true)
     const userAddress = await signer.getAddress()
+    setUserAddressValue(userAddress)
     const response = await fetch(`http://localhost:4000/api/requests/getReceivedRequests/${userAddress}`, {
       method: 'GET',
       headers: {
@@ -81,25 +83,6 @@ const UserInbox = ({provider, signer}) => {
     setShowLoadingInboxDialog(false)
   }
 
-  async function renderNftRequests() {
-    if(userNftRequests.length == 0){
-      return (
-        <div className="p-d-flex p-jc-center">
-          <p>You have no NFT Requests</p>
-        </div>
-      )
-    }
-    else{
-      return (
-        <>
-        <div className="p-d-flex p-jc-center">
-          <p>Render NFT Requests</p>
-        </div>
-        </>
-      )
-    }
-  }
-
 
   return (
     <>
@@ -119,13 +102,13 @@ const UserInbox = ({provider, signer}) => {
     {/* render NFT requests */}
     {!showLoadingInboxDialog && currentlySelectedRequestType=="nft" && userNftRequests.length>0 && userNftRequests.map((request, index) => {
       return (
-        <NFTRequestCard key={index} request={request} provider={provider} signer={signer} />
+        <NFTRequestCard key={index} request={request} provider={provider} signer={signer} address={userAddressValue} />
       )
     })}
 
 {!showLoadingInboxDialog && currentlySelectedRequestType=="crypto" && userNftRequests.length>0 && userCryptoRequests.map((request, index) => {
       return (
-        <CryptoRequestCard key={index} request={request} provider={provider} signer={signer} />
+        <CryptoRequestCard key={index} request={request} provider={provider} signer={signer} address={userAddressValue} />
       )
     })}
 
