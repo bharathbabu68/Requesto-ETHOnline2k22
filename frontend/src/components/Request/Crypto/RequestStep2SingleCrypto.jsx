@@ -19,13 +19,14 @@ const RequestStep2SingleCrypto = ({completeStep2SingleRequestCrypto}) => {
       setLoadingStatus(false)
       return
     }
-    // check if cryptoRequestAddress is a valid address
-    var isValidAddress =  ethers.utils.isAddress(cryptoRequestAddress)
-    if(!isValidAddress){
+
+    // check if cryptoRequestAddress ends with .eth
+    if(cryptoRequestAddress.endsWith(".eth")){
+      // check if ens domain is valid
       const provider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_INFURA_ETHEREUM_ENDPOINT);
       var address = await provider.resolveName(cryptoRequestAddress);
         if(!address){
-            alert("Invalid Address / ENS domain")
+            alert("Invalid ENS domain")
             setLoadingStatus(false)
             return
         }
@@ -33,6 +34,18 @@ const RequestStep2SingleCrypto = ({completeStep2SingleRequestCrypto}) => {
           setCryptoRequestAddress(address)
           console.log("Address resolved to: ", address)
         }
+
+    }
+    else{
+
+      // check if cryptoRequestAddress is a valid address
+      var isValidAddress =  ethers.utils.isAddress(cryptoRequestAddress)
+      if(!isValidAddress){
+        alert("Invalid Address")
+        setLoadingStatus(false)
+        return
+      }
+      address = cryptoRequestAddress
     }
     setLoadingStatus(false)
     completeStep2SingleRequestCrypto(cryptoRequestCurrency, cryptoRequestAmount, address)

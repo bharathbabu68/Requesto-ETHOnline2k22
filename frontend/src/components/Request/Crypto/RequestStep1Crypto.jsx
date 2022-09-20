@@ -9,12 +9,12 @@ const RequestStep1Crypto = ({completeCryptoRequestType}) => {
     <>
     <h3>Crypto Request - Step 1</h3>
     <br />
-    <p>Request crypto from either a single address or split a payment to request from multiple people at the same time !</p>
+    <p>Request crypto from either a single address or send a batch payment request to request from multiple people at the same time !</p>
     <br />
     <h6>Choose type of Request</h6>
     <RadioButton value="single" onChange={(e) => setCryptoRequestType(e.value)} checked={cryptoRequestType === 'single'} />
     <label style={{marginLeft:"10px", marginRight:"20px"}} >Single Crypto Request</label>
-    <RadioButton value="split" onChange={(e) => setCryptoRequestType(e.value)} checked={cryptoRequestType === 'split'} />
+    <RadioButton value="broadcast" onChange={(e) => setCryptoRequestType(e.value)} checked={cryptoRequestType === 'broadcast'} />
     <label style={{marginLeft:"10px"}} >Batch payment Request </label>
     <br />
     <br />

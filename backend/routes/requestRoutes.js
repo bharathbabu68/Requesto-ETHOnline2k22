@@ -7,6 +7,8 @@ router.get("/getAllRequests", requestController.getAllRequests)
 
 router.post("/createRequest", requestController.createRequest)
 
+router.post("/createBatchRequests", requestController.createBatchRequests)
+
 router.get("/getReceivedRequests/:id", requestController.getReceivedRequests)
 
 router.get("/getSentRequests/:id", requestController.getSentRequests)

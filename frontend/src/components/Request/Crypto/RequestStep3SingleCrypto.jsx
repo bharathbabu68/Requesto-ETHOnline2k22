@@ -7,7 +7,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 
-const RequestStep3SingleCrypto = ({cryptoReqReceiverAddress, cryptoReqChain, cryptoReqAmount, provider, signer}) => {
+const RequestStep3SingleCrypto = ({cryptoReqReceiverAddress, cryptoReqChain, cryptoReqAmount, provider, signer, completeStep3}) => {
 
   const [showDialog, setShowDialog] = useState(false)
   const [additionalMessage, setAdditionalMessage] = useState('')
@@ -76,7 +76,8 @@ const RequestStep3SingleCrypto = ({cryptoReqReceiverAddress, cryptoReqChain, cry
       console.log("Request sent successfully")
       setDialogStatus("Request sent successfully !")
       setShowSpinner(false)
-      // setShowDialog(false)
+      setShowDialog(false)
+      completeStep3()
     }
   }
 
@@ -108,7 +109,7 @@ const RequestStep3SingleCrypto = ({cryptoReqReceiverAddress, cryptoReqChain, cry
     <InputText placeholder="Enter additional message for receiver" style={{width:"100%"}} value={additionalMessage} onChange={(e) => setAdditionalMessage(e.target.value)} />
     <br />
     <br />
-    <Button label="Confirm Details" onClick={async ()=>{
+    <Button label="Send Request" onClick={async ()=>{
       await sendCryptoRequest()
     }}/>
 

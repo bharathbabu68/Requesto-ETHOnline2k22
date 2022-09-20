@@ -78,4 +78,39 @@ const sendTargetedNotificationCrypto = async (sender_address, receiver_address, 
     }
 }
 
-module.exports = {sendTargetedNotificationNFT, sendTargetedNotificationCrypto}
+const sendSubsetNotificationCrypto = async (sender_address, receiver_addresses, chain, amount) => {
+    try {
+      var image_url, currency_symbol;
+      if(chain == "ethereum"){
+        currency_symbol = "ETH"
+        image_url = "https://requesto.infura-ipfs.io/ipfs/QmdUCaqRiN5R6WfJBMJrAwtW7iFD9R87kqby9jeG8ZjGzj"
+      }
+      else{
+        currency_symbol = "MATIC"
+        image_url = "https://requesto.infura-ipfs.io/ipfs/QmdUCaqRiN5R6WfJBMJrAwtW7iFD9R87kqby9jeG8ZjGzj"
+      }
+    const apiResponse = await EpnsAPI.payloads.sendNotification({
+      signer,
+      type: 4, // target
+      identityType: 2, // direct payload
+      notification: {
+        title: `Payment Request (Batch)`,
+        body: `${sender_address} requested you for ${amount} ${currency_symbol} Click on this link to pay in Requesto platform `,
+      },
+      payload: {
+        title: `Payment Request (Batch)`,
+        body: `${sender_address} requested you for ${amount} ${currency_symbol}. Click on this link to pay in Requesto platform `,
+        cta: ``,
+        img: image_url
+      },
+      recipients: receiver_addresses, // recipient addresses
+      channel: `eip155:80001:${process.env.EPNS_CHANNEL_ADDR}`, // your channel address
+      env: 'staging'
+    });
+  }
+  catch (err) {
+    console.error('Error: ', err);
+  }
+}
+
+module.exports = {sendTargetedNotificationNFT, sendTargetedNotificationCrypto, sendSubsetNotificationCrypto}

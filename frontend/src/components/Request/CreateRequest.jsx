@@ -9,8 +9,9 @@ import RequestStep2NFT from './NFT/RequestStep2NFT';
 import RequestStep3NFT from './NFT/RequestStep3NFT';
 
 import RequestStep2SingleCrypto from './Crypto/RequestStep2SingleCrypto';
-import RequestStep2CryptoSplit from './Crypto/RequestStep2CryptoSplit';
+import RequestStep2BroadcastCrypto from './Crypto/RequestStep2BroadcastCrypto';
 import RequestStep3SingleCrypto from './Crypto/RequestStep3SingleCrypto';
+import RequestStep3BroadcastCrypto from './Crypto/RequestStep3BroadcastCrypto';
 
 import RequestComplete from './RequestComplete';
 import { Dialog } from 'primereact/dialog';
@@ -74,7 +75,7 @@ const CreateRequest = ({provider, signer}) => {
             setCryptoRequestType("single")
         }
         else{
-            setCryptoRequestType("split")
+            setCryptoRequestType("broadcast")
         }
         setStep1CryptoStatus(true)
     }
@@ -86,26 +87,46 @@ const CreateRequest = ({provider, signer}) => {
         setStep2CryptoStatus(true)
     }
 
+    async function completeStep2BatchRequestCrypto(crypto_req_addresses, crypto_req_amount, crypto_req_chain){
+        setCryptoReqChain(crypto_req_chain)
+        setCryptoReqAmount(crypto_req_amount)
+        setCryptoReqReceiverAddress(crypto_req_addresses)
+        setStep2CryptoStatus(true)
+    }
+
 
     async function completeStep1(receiverAddress1) {
         if(requestType=="NFT"){
             setFetchNFTStuff(true)
         }
         // validate receiverAddress and requestType
-        var isValidAddress =  ethers.utils.isAddress(receiverAddress1)
-        if(isValidAddress) {
-            setReceiverAddress(receiverAddress1)
-        }
-        else{
+
+        if(receiverAddress1.endsWith(".eth")){
+            // check if ens name is valid
             const provider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_INFURA_ETHEREUM_ENDPOINT);
             var address = await provider.resolveName(receiverAddress1);
             if(!address){
-                setFetchNFTStatus("Invalid Address / ENS domain")
+                setFetchNFTStatus("Invalid ENS domain")
                 setFetchNftLoader(false)
                 return
             }
             setReceiverAddress(address)
             receiverAddress1 = address
+
+        }
+
+        else{
+            // check if address is valid
+            var isValidAddress =  ethers.utils.isAddress(receiverAddress1)
+            if(isValidAddress) {
+                setReceiverAddress(receiverAddress1)
+            }
+            else{
+                setFetchNFTStatus("Invalid Ethereum address")
+                setFetchNftLoader(false)
+                return
+            }
+
         }
 
         if(requestType=='NFT'){
@@ -135,6 +156,10 @@ const CreateRequest = ({provider, signer}) => {
         setStep3NFTStatus(true)
     }
 
+    async function completeStep3Crypto(){
+        setStep3CryptoStatus(true)
+    }
+
   return (
     <>
     
@@ -161,9 +186,11 @@ const CreateRequest = ({provider, signer}) => {
         {requestType=="Crypto" && chooseRequestTypeStatus && !step1CryptoStatus  && <RequestStep1Crypto completeCryptoRequestType={completeCryptoRequestType}/>}
 
         {requestType=="Crypto" && chooseRequestTypeStatus && step1CryptoStatus && !step2CryptoStatus && cryptoRequestType=="single"  && <RequestStep2SingleCrypto completeStep2SingleRequestCrypto={completeStep2SingleRequestCrypto}/>}
-        {requestType=="Crypto" && chooseRequestTypeStatus && step1CryptoStatus && step2CryptoStatus && !step3CryptoStatus && cryptoRequestType=="single"  && <RequestStep3SingleCrypto cryptoReqReceiverAddress={cryptoReqReceiverAddress} cryptoReqChain={cryptoReqChain} cryptoReqAmount={cryptoReqAmount} provider={provider} signer = {signer}/>}
+        {requestType=="Crypto" && chooseRequestTypeStatus && step1CryptoStatus && step2CryptoStatus && !step3CryptoStatus && cryptoRequestType=="single"  && <RequestStep3SingleCrypto cryptoReqReceiverAddress={cryptoReqReceiverAddress} cryptoReqChain={cryptoReqChain} cryptoReqAmount={cryptoReqAmount} provider={provider} signer = {signer} completeStep3={completeStep3Crypto}/>}
         
-        {requestType=="Crypto" && chooseRequestTypeStatus && step1CryptoStatus && !step2CryptoStatus && step1CryptoStatus=="split"  && <RequestStep2CryptoSplit/>}
+        {requestType=="Crypto" && chooseRequestTypeStatus && step1CryptoStatus && !step2CryptoStatus && !step3CryptoStatus && cryptoRequestType=="broadcast"  && <RequestStep2BroadcastCrypto completeStep2BatchRequestCrypto={completeStep2BatchRequestCrypto}/>}
+
+        {requestType=="Crypto" && chooseRequestTypeStatus && step1CryptoStatus && step2CryptoStatus && !step3CryptoStatus && cryptoRequestType=="broadcast"  && <RequestStep3BroadcastCrypto cryptoReqReceiverAddress={cryptoReqReceiverAddress} cryptoReqChain={cryptoReqChain} cryptoReqAmount={cryptoReqAmount} provider={provider} signer = {signer} completeStep3={completeStep3Crypto}/>}
         
         {requestType=="NFT" && chooseRequestTypeStatus && step1NFTStatus && !step2NFTStatus && <RequestStep2NFT receiver_address={receiverAddress} nftResponseEthereum={nftResponseEthereum} nftResponsePolygon={nftResponsePolygon} completeStep2NFT={completeStep2NFT}/>}
 
@@ -171,6 +198,8 @@ const CreateRequest = ({provider, signer}) => {
         {requestType=="NFT" && chooseRequestTypeStatus && step1NFTStatus && step2NFTStatus && !step3NFTStatus && <RequestStep3NFT receiver_address={receiverAddress} nftContractAddress={chosenNftContractAddress} nftTokenId={chosenNftTokenId} chain = {chosenChain} tokenMetadata = {chosenNftMetadataUrl} provider={provider} signer={signer} completeStep3={completeStep3}/>}
     
         {chooseRequestTypeStatus && step1NFTStatus && step2NFTStatus && step3NFTStatus && <RequestComplete />}
+
+        {chooseRequestTypeStatus && step1CryptoStatus && step2CryptoStatus && step3CryptoStatus && <RequestComplete />}
     
     </Container>
     </>
