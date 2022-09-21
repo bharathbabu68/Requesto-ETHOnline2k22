@@ -124,7 +124,6 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
     setUserNftRequests(nft_requests)
     setUserCryptoRequests(crypto_requests)
     if(request_id_to_fetch && !found){
-      alert("No request found with this id")
       setUserNftRequests([])
       setUserCryptoRequests([])
     }

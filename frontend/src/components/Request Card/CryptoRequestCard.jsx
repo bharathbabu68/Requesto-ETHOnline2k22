@@ -4,9 +4,11 @@ import { ethers } from 'ethers'
 import { networkParams } from '../../networkParams';
 import { toHex } from '../../utils';
 import {QRCodeCanvas} from 'qrcode.react';
+import { Dialog } from 'primereact/dialog';
 
 const CryptoRequestCard = ({request, provider, signer, address, showChat}) => {
   const [loadingTransferStatus, setLoadingTransferStatus] = useState(false)
+  const [showQr, setShowQr] = useState(false)
 
   async function TransferCrypto(sender, amount, chain) {
     var required_chain_id;
@@ -53,6 +55,12 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat}) => {
 
   return (
     <>
+  <Dialog header="Displaying QR code to request" visible={showQr} style={{ width: '30vw' }} onHide={() => {
+  setShowQr(false)}}>
+    <div style={{ overflow:"hidden"}}>
+    <QRCodeCanvas value={`http://localhost:3000/app/request/${request._id}`} />
+    </div>
+    </Dialog>
     <div style={{backgroundColor: "black", padding:"2%", margin:"30px", borderRadius:"30px"}}>
           <p>Request ID: {request._id}</p>
           <p>Request Sender: {request.requestSender}</p>
@@ -62,17 +70,17 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat}) => {
           <p>Additional Message: {request.additional_message}</p>
           <p>Request Signature: {request.requestSignature}</p>
           <p>Request Status: {request.requestStatus}</p>
-          <div style={{ overflow:"hidden"}}>
-          <QRCodeCanvas value="https://reactjs.org/" />
-          </div>
           {request.requestSender!=address && <Button label="Make Payment" onClick={async ()=>{
             await TransferCrypto(request.requestSender, request.amount, request.chain)
           }}/>}
           {request.requestSender!=address &&<Button style={{marginLeft:"30px"}} label="Reject Request" onClick={async ()=>{
             RejectRequest()
           }}/>}
-          {request.requestSender!=address &&<Button style={{marginLeft:"30px"}} label="Chat with User" onClick={async ()=>{
+          {<Button style={{marginLeft:"30px"}} label="Chat with User" onClick={async ()=>{
             showChat(request)
+          }}/>}
+            {<Button style={{marginLeft:"30px"}} label="Share Request" onClick={async ()=>{
+              setShowQr(true)
           }}/>}
         </div>
     </>

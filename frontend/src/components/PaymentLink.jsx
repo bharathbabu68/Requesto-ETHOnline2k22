@@ -13,7 +13,7 @@ import { toHex } from '../utils'
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import {QRCodeCanvas} from 'qrcode.react';
 
-const DappHome = ({request_id_to_fetch}) => {
+const PaymentLink = ({request_id_to_fetch}) => {
 
     useEffect(() => {
       if(request_id_to_fetch){
@@ -144,45 +144,15 @@ const DappHome = ({request_id_to_fetch}) => {
         <Row style={{padding:"1%"}}>
         <Col md={10}>
             <Row>
-            <Col md={3}>
-            <h3 style={{fontWeight:"bold", color:"white", paddingTop:"10px", color:"white"}}>Requesto</h3>
+            <Col md={2}>
+            <h3 onClick={() => window.location.href = "http://localhost:3000/app"} style={{fontWeight:"bold", color:"white", paddingTop:"10px", color:"white", cursor:"pointer"}}>Requesto</h3>
             </Col>
-            <Col md={9} style={{paddingTop:"10px", textAlign:"left"}}>
+            <Col md={10} style={{paddingTop:"10px", textAlign:"left"}}>
                 <Row>
-                <Col md={4} style={{color: "white"}}>
-        <Button style={{height:"50px", width:"190px",borderRadius:"0px", border:"none", borderBottom:`${createRequestButtonBorder}`}} onClick={()=>{
-                setShowInbox(false)
-                setShowSent(false)
-                setShowCreateRequest(true)
-                setInboxButtonBorder("none")
-                setSentButtonBorder("none")
-                setCreateRequestButtonBorder("1px solid white")
-        }} label="New Request"  className="p-button-outlined p-button-warning" />
-        </Col>
-                <Col md={4} style={{color: "white"}}>
-            <Button style={{height:"50px", width:"150px", borderRadius:"0px",border:"none", borderBottom:`${inboxButtonBorder}`}} onClick={()=>{
-                setShowInbox(true)
-                setShowNotificationDetails(false)
-                setShowSent(false)
-                setShowCreateRequest(false)
-                setInboxButtonBorder("1px solid white")
-                setSentButtonBorder("none")
-                setCreateRequestButtonBorder("none")
-            }} label="View  Inbox"  className="p-button-warning p-button-text" />
-        </Col>
-        
-        <Col md={4} style={{color: "white"}}>
-        <Button style={{height:"50px", width:"200px", borderRadius:"0px",border:"none", borderBottom:`${sentButtonBorder}`}} onClick={()=>{
-                setShowInbox(false)
-                setShowSent(true)
-                setShowCreateRequest(false)
-                setInboxButtonBorder("none")
-                setSentButtonBorder("1px solid white")
-                setCreateRequestButtonBorder("none")
-            }
-        } label="View Sent Requests"  className="p-button-outlined p-button-warning" />
-        </Col>
+                <Col md={3}>
+                </Col>
                 </Row>
+     
             </Col>
 
             </Row>
@@ -195,7 +165,8 @@ const DappHome = ({request_id_to_fetch}) => {
       </Row>
       <div style={{color:"white", textAlign:"center", margin:"7%", marginTop:"1%", paddingTop:"2%", paddingBottom:"2%"}}>
         {signer && showInbox && <UserInbox provider={provider} signer={signer} request_id_to_fetch={request_id_to_fetch}/>}
-        {showInbox && !signer && <h3 style={{marginTop:"10%"}}>Please Connect Wallet to view Inbox</h3>}
+        {showInbox && !signer && !request_id_to_fetch && <h3 style={{marginTop:"10%"}}>Please Connect Wallet to view Inbox</h3>}
+        {showInbox && !signer && request_id_to_fetch && <h3 style={{marginTop:"10%"}}>Please Connect Wallet to view Received Request</h3>}
         {signer && showSent && <UserSent provider={provider} signer={signer}/>}
         {showSent && !signer && <h3 style={{marginTop:"10%"}}>Please Connect Wallet to view Sent Requests</h3>}
         {showCreateRequest && <CreateRequest provider={provider} signer={signer}/>}
@@ -206,4 +177,4 @@ const DappHome = ({request_id_to_fetch}) => {
   )
 }
 
-export default DappHome
+export default PaymentLink

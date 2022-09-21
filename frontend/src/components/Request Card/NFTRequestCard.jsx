@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { Button } from 'primereact/button';
 import { ethers } from 'ethers'
 import { networkParams } from '../../networkParams';
-import { toHex } from '../../utils';
-import QRCode from "react-qr-code";
+import {QRCodeCanvas} from 'qrcode.react';
+import { Dialog } from 'primereact/dialog';
 
 const NFTRequestCard = ({request, provider, signer, address, ReloadComponentWhenDeleted, showChat}) => {
   const [loadingTransferStatus, setLoadingTransferStatus] = useState(false)
   const [rejectRequestStatus, setRejectRequestStatus] = useState(false)
+  const [showQr, setShowQr] = useState(false)
 
   async function TransferNFT(nft_receiver, nft_contract_address, nft_token_id, chain) {
     setLoadingTransferStatus(true)
@@ -79,7 +80,13 @@ const NFTRequestCard = ({request, provider, signer, address, ReloadComponentWhen
 
 
   return (
-    <>        
+    <> 
+    <Dialog header="Displaying QR code to request" visible={showQr} style={{ width: '30vw' }} onHide={() => {
+  setShowQr(false)}}>
+    <div style={{ overflow:"hidden"}}>
+    <QRCodeCanvas value={`http://localhost:3000/app/request/${request._id}`} />
+    </div>
+    </Dialog>      
     <div style={{backgroundColor: "black", padding:"2%", margin:"30px", borderRadius:"30px"}}>
           <p>Request ID: {request._id}</p>
           <p>Request Sender: {request.requestSender}</p>
@@ -99,8 +106,11 @@ const NFTRequestCard = ({request, provider, signer, address, ReloadComponentWhen
           {request.requestSender!=address && <Button loading = {rejectRequestStatus} style={{marginLeft:"30px"}} label="Reject Request" onClick={async ()=>{
             RejectRequest()
           }}/>}
-          {request.requestSender!=address &&<Button style={{marginLeft:"30px"}} label="Chat with User" onClick={async ()=>{
+          {<Button style={{marginLeft:"30px"}} label="Chat with User" onClick={async ()=>{
             showChat(request)
+          }}/>}
+          {<Button style={{marginLeft:"30px"}} label="Share Request" onClick={async ()=>{
+              setShowQr(true)
           }}/>}
         </div>
     </>
