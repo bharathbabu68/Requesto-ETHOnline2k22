@@ -3,6 +3,7 @@ import { Button } from 'primereact/button';
 import { ethers } from 'ethers'
 import { networkParams } from '../../networkParams';
 import { toHex } from '../../utils';
+import {QRCodeCanvas} from 'qrcode.react';
 
 const CryptoRequestCard = ({request, provider, signer, address, showChat}) => {
   const [loadingTransferStatus, setLoadingTransferStatus] = useState(false)
@@ -61,6 +62,9 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat}) => {
           <p>Additional Message: {request.additional_message}</p>
           <p>Request Signature: {request.requestSignature}</p>
           <p>Request Status: {request.requestStatus}</p>
+          <div style={{ overflow:"hidden"}}>
+          <QRCodeCanvas value="https://reactjs.org/" />
+          </div>
           {request.requestSender!=address && <Button label="Make Payment" onClick={async ()=>{
             await TransferCrypto(request.requestSender, request.amount, request.chain)
           }}/>}

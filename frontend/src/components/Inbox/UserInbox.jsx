@@ -7,7 +7,7 @@ import NFTRequestCard from "../Request Card/NFTRequestCard"
 import CryptoRequestCard from "../Request Card/CryptoRequestCard"
 import ChatWindow from "../Chat/ChatWindow";
 
-const UserInbox = ({provider, signer}) => {
+const UserInbox = ({provider, signer, request_id_to_fetch}) => {
 
   const [userNftRequests, setUserNftRequests] = useState([])
   const [userCryptoRequests, setUserCryptoRequests] = useState([])
@@ -96,8 +96,38 @@ const UserInbox = ({provider, signer}) => {
     // reverse the array to show the latest requests first
     nft_requests.reverse()
     crypto_requests.reverse()
+    // check if nft_requests has a request with _id = request_id_to_fetch
+    var found = false
+    if(request_id_to_fetch){
+      for(var i=0; i<nft_requests.length; i++){
+        if(nft_requests[i]._id == request_id_to_fetch){
+          nft_requests = [nft_requests[i]]
+          // set currently selected request type to nft
+          setCurrentlySelectedRequestType("nft")
+          found = true
+          break
+        }
+      }
+      if(!found){
+      for(var i=0; i<crypto_requests.length; i++){
+        if(crypto_requests[i]._id == request_id_to_fetch){
+          crypto_requests = [crypto_requests[i]]
+          // set currently selected request type to crypto
+          found = true
+          setCurrentlySelectedRequestType("crypto")
+          break
+        }
+      }
+    }
+  }
+      // set currently 
     setUserNftRequests(nft_requests)
     setUserCryptoRequests(crypto_requests)
+    if(request_id_to_fetch && !found){
+      alert("No request found with this id")
+      setUserNftRequests([])
+      setUserCryptoRequests([])
+    }
     console.log("Completed fetching NFT and Crypto Requests")
     console.log(nft_requests)
     console.log(crypto_requests)
@@ -108,7 +138,6 @@ const UserInbox = ({provider, signer}) => {
   return (
     <>
     <Container >
-
     <Dialog header="Loading Inbox" visible={showLoadingInboxDialog} style={{ width: '30vw' }} onHide={() => {}}>
     <p>Loading your Inbox. Fetching all your requests from IPFS !</p>
     <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"/>

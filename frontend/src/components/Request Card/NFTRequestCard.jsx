@@ -3,6 +3,7 @@ import { Button } from 'primereact/button';
 import { ethers } from 'ethers'
 import { networkParams } from '../../networkParams';
 import { toHex } from '../../utils';
+import QRCode from "react-qr-code";
 
 const NFTRequestCard = ({request, provider, signer, address, ReloadComponentWhenDeleted, showChat}) => {
   const [loadingTransferStatus, setLoadingTransferStatus] = useState(false)

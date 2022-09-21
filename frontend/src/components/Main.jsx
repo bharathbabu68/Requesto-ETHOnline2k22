@@ -9,9 +9,10 @@ const Main = () => {
     <>
     <BrowserRouter>
         <Switch>
-             <Route path="/inbox" component={Inbox}/>
-            <Route path="/app" component={DappHome}/>
-             <Route path="/" component={Home}/>
+          <Route path="/inbox" component={Inbox}/>
+          <Route path="/app/:request_id" component={({match})=>{  return <DappHome request_id_to_fetch={match.params.request_id}/> }} />
+          <Route path="/app" component={DappHome}/>
+          <Route path="/" component={Home}/>
         </Switch>
     </BrowserRouter>
     </>

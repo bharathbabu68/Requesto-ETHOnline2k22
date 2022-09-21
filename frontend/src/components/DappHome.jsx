@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap'
 import { Button } from 'primereact/button';
 import CreateRequest from "../components/Request/CreateRequest"
@@ -11,16 +11,31 @@ import { providerOptions } from './Web3Modal/providerOptions';
 import { networkParams } from '../networkParams';
 import { toHex } from '../utils'
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
+import {QRCodeCanvas} from 'qrcode.react';
 
-const DappHome = () => {
-    const [showInbox, setShowInbox] = useState(true)
+const DappHome = ({request_id_to_fetch}) => {
+
+    useEffect(() => {
+      if(request_id_to_fetch){
+        setShowInbox(true)
+        setShowNotificationDetails(false)
+        setShowSent(false)
+        setShowCreateRequest(false)
+        setInboxButtonBorder("1px solid white")
+        setSentButtonBorder("none")
+        setCreateRequestButtonBorder("none")
+      }
+    }, [])
+
+
+    const [showInbox, setShowInbox] = useState(false)
     const [showSent, setShowSent] = useState(false)
-    const [showCreateRequest, setShowCreateRequest] = useState(false)
+    const [showCreateRequest, setShowCreateRequest] = useState(true)
     const [showNotificationDetails, setShowNotificationDetails] = useState(false)
     const [requestId, setRequestId] = useState(false)
-    const [inboxButtonBorder, setInboxButtonBorder] = useState("3px solid white")
+    const [inboxButtonBorder, setInboxButtonBorder] = useState("none")
     const [sentButtonBorder, setSentButtonBorder] = useState("none")
-    const [createRequestButtonBorder, setCreateRequestButtonBorder] = useState("none")
+    const [createRequestButtonBorder, setCreateRequestButtonBorder] = useState("3px solid white")
     const [connectWalletStatus, setConnectWalletStatus] = useState("Connect Wallet")
 
     const [provider, setProvider] = useState()
@@ -35,6 +50,7 @@ const DappHome = () => {
     });
 
     async function connectWallet() {
+      console.log("Printing props request ID: ", request_id_to_fetch)
       const connection = await web3Modal.connect()
       const provider = new ethers.providers.Web3Provider(connection)
       console.log("Provider", provider)
@@ -120,15 +136,27 @@ const DappHome = () => {
     }
 
   return (
+    <>
+  
     <Container id='dapp-home' fluid style={{minHeight:"1000px", overflow:"hidden"}}>
         <Row style={{padding:"1%"}}>
         <Col md={10}>
             <Row>
             <Col md={3}>
-            <h3 style={{fontWeight:"bold", color:"white", paddingTop:"10px"}}>Request<font style={{color: "#8442f5"}}>io</font></h3>
+            <h3 style={{fontWeight:"bold", color:"white", paddingTop:"10px", color:"white"}}>Requesto</h3>
             </Col>
             <Col md={9} style={{paddingTop:"10px", textAlign:"left"}}>
                 <Row>
+                <Col md={4} style={{color: "white"}}>
+        <Button style={{height:"50px", width:"190px",borderRadius:"0px", border:"none", borderBottom:`${createRequestButtonBorder}`}} onClick={()=>{
+                setShowInbox(false)
+                setShowSent(false)
+                setShowCreateRequest(true)
+                setInboxButtonBorder("none")
+                setSentButtonBorder("none")
+                setCreateRequestButtonBorder("1px solid white")
+        }} label="New Request"  className="p-button-outlined p-button-warning" />
+        </Col>
                 <Col md={4} style={{color: "white"}}>
             <Button style={{height:"50px", width:"150px", borderRadius:"0px",border:"none", borderBottom:`${inboxButtonBorder}`}} onClick={()=>{
                 setShowInbox(true)
@@ -138,8 +166,9 @@ const DappHome = () => {
                 setInboxButtonBorder("1px solid white")
                 setSentButtonBorder("none")
                 setCreateRequestButtonBorder("none")
-            }} label="View Inbox"  className="p-button-warning p-button-text" />
+            }} label="View  Inbox"  className="p-button-warning p-button-text" />
         </Col>
+        
         <Col md={4} style={{color: "white"}}>
         <Button style={{height:"50px", width:"200px", borderRadius:"0px",border:"none", borderBottom:`${sentButtonBorder}`}} onClick={()=>{
                 setShowInbox(false)
@@ -150,16 +179,6 @@ const DappHome = () => {
                 setCreateRequestButtonBorder("none")
             }
         } label="View Sent Requests"  className="p-button-outlined p-button-warning" />
-        </Col>
-        <Col md={4} style={{color: "white"}}>
-        <Button style={{height:"50px", width:"190px",borderRadius:"0px", border:"none", borderBottom:`${createRequestButtonBorder}`}} onClick={()=>{
-                setShowInbox(false)
-                setShowSent(false)
-                setShowCreateRequest(true)
-                setInboxButtonBorder("none")
-                setSentButtonBorder("none")
-                setCreateRequestButtonBorder("1px solid white")
-        }} label="Send New Request"  className="p-button-outlined p-button-warning" />
         </Col>
                 </Row>
             </Col>
@@ -173,7 +192,7 @@ const DappHome = () => {
       </Col>
       </Row>
       <div style={{color:"white", textAlign:"center", margin:"7%", marginTop:"1%", paddingTop:"2%", paddingBottom:"2%"}}>
-        {signer && showInbox && <UserInbox provider={provider} signer={signer}/>}
+        {signer && showInbox && <UserInbox provider={provider} signer={signer} request_id_to_fetch={request_id_to_fetch}/>}
         {showInbox && !signer && <h3 style={{marginTop:"10%"}}>Please Connect Wallet to view Inbox</h3>}
         {signer && showSent && <UserSent provider={provider} signer={signer}/>}
         {showSent && !signer && <h3 style={{marginTop:"10%"}}>Please Connect Wallet to view Sent Requests</h3>}
@@ -181,6 +200,7 @@ const DappHome = () => {
         {showNotificationDetails && <NotificationDetails signer={signer} requestID={requestId} />}
       </div>
     </Container>
+    </>
   )
 }
 
