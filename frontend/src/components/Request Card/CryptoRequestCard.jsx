@@ -4,7 +4,7 @@ import { ethers } from 'ethers'
 import { networkParams } from '../../networkParams';
 import { toHex } from '../../utils';
 
-const CryptoRequestCard = ({request, provider, signer, address}) => {
+const CryptoRequestCard = ({request, provider, signer, address, showChat}) => {
   const [loadingTransferStatus, setLoadingTransferStatus] = useState(false)
 
   async function TransferCrypto(sender, amount, chain) {
@@ -66,6 +66,9 @@ const CryptoRequestCard = ({request, provider, signer, address}) => {
           }}/>}
           {request.requestSender!=address &&<Button style={{marginLeft:"30px"}} label="Reject Request" onClick={async ()=>{
             RejectRequest()
+          }}/>}
+          {request.requestSender!=address &&<Button style={{marginLeft:"30px"}} label="Chat with User" onClick={async ()=>{
+            showChat(request)
           }}/>}
         </div>
     </>

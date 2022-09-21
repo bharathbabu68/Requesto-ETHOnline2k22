@@ -5,6 +5,7 @@ import { Button } from 'primereact/button';
 import { Container, Row, Col } from 'react-bootstrap'
 import NFTRequestCard from "../Request Card/NFTRequestCard"
 import CryptoRequestCard from "../Request Card/CryptoRequestCard"
+import ChatWindow from "../Chat/ChatWindow";
 
 const UserInbox = ({provider, signer}) => {
 
@@ -14,10 +15,21 @@ const UserInbox = ({provider, signer}) => {
   const [currentlySelectedRequestType, setCurrentlySelectedRequestType] = useState("nft")
   const [userAddressValue, setUserAddressValue] = useState("")
   const [deleted, setDeleted] = useState(0)
+  const [activeChat, setActiveChat] = useState(null)
 
   useEffect(() => {
     getAllUserRequests()
   }, [deleted])
+
+
+  async function showChat(req){
+    setActiveChat(req)
+    console.log("In showchat function")
+  }
+
+  async function closeChat(){
+    setActiveChat(null)
+  }
 
 
   async function ReloadComponentWhenDeleted() {
@@ -81,6 +93,9 @@ const UserInbox = ({provider, signer}) => {
       }
 
     }
+    // reverse the array to show the latest requests first
+    nft_requests.reverse()
+    crypto_requests.reverse()
     setUserNftRequests(nft_requests)
     setUserCryptoRequests(crypto_requests)
     console.log("Completed fetching NFT and Crypto Requests")
@@ -102,21 +117,23 @@ const UserInbox = ({provider, signer}) => {
     <h3>Inbox</h3>
     <h6>Displaying your inbox of {currentlySelectedRequestType} requests</h6>
 
-    {!showLoadingInboxDialog && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <p>No NFT Requests Received Till Now</p>}
-    {!showLoadingInboxDialog && currentlySelectedRequestType=="crypto" && userCryptoRequests.length==0 && <p>No Crypto Requests Received Till Now</p>}
+    {!showLoadingInboxDialog && !activeChat && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <p>No NFT Requests Received Till Now</p>}
+    {!showLoadingInboxDialog  && !activeChat && currentlySelectedRequestType=="crypto" && userCryptoRequests.length==0 && <p>No Crypto Requests Received Till Now</p>}
 
     {/* render NFT requests */}
-    {!showLoadingInboxDialog && currentlySelectedRequestType=="nft" && userNftRequests.length>0 && userNftRequests.map((request, index) => {
+    {!showLoadingInboxDialog  && !activeChat && currentlySelectedRequestType=="nft" && userNftRequests.length>0 && userNftRequests.map((request, index) => {
       return (
-        <NFTRequestCard key={index} request={request} provider={provider} signer={signer} address={userAddressValue} ReloadComponentWhenDeleted={ReloadComponentWhenDeleted} />
+        <NFTRequestCard key={index} request={request} provider={provider} signer={signer} address={userAddressValue} ReloadComponentWhenDeleted={ReloadComponentWhenDeleted} showChat={showChat}/>
       )
     })}
 
-{!showLoadingInboxDialog && currentlySelectedRequestType=="crypto" && userNftRequests.length>0 && userCryptoRequests.map((request, index) => {
+{!showLoadingInboxDialog  && !activeChat &&  currentlySelectedRequestType=="crypto" && userNftRequests.length>0 && userCryptoRequests.map((request, index) => {
       return (
-        <CryptoRequestCard key={index} request={request} provider={provider} signer={signer} address={userAddressValue} ReloadComponentWhenDeleted={ReloadComponentWhenDeleted} />
+        <CryptoRequestCard key={index} request={request} provider={provider} signer={signer} address={userAddressValue} ReloadComponentWhenDeleted={ReloadComponentWhenDeleted} showChat={showChat}/>
       )
     })}
+
+    {activeChat && <ChatWindow provider={provider} signer={signer} request={activeChat} closeChat={closeChat}/>}
 
     </Container>
     </>

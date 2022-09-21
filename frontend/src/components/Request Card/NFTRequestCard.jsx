@@ -4,7 +4,7 @@ import { ethers } from 'ethers'
 import { networkParams } from '../../networkParams';
 import { toHex } from '../../utils';
 
-const NFTRequestCard = ({request, provider, signer, address, ReloadComponentWhenDeleted}) => {
+const NFTRequestCard = ({request, provider, signer, address, ReloadComponentWhenDeleted, showChat}) => {
   const [loadingTransferStatus, setLoadingTransferStatus] = useState(false)
   const [rejectRequestStatus, setRejectRequestStatus] = useState(false)
 
@@ -97,6 +97,9 @@ const NFTRequestCard = ({request, provider, signer, address, ReloadComponentWhen
           }}/>}
           {request.requestSender!=address && <Button loading = {rejectRequestStatus} style={{marginLeft:"30px"}} label="Reject Request" onClick={async ()=>{
             RejectRequest()
+          }}/>}
+          {request.requestSender!=address &&<Button style={{marginLeft:"30px"}} label="Chat with User" onClick={async ()=>{
+            showChat(request)
           }}/>}
         </div>
     </>
