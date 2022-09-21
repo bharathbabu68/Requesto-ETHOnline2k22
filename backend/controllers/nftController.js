@@ -1,4 +1,6 @@
 require("dotenv").config()
+const fetch = require('node-fetch')
+globalThis.fetch = fetch
 
 // fetch owned NFTs
 const getOwnedNfts = async (req, res) => {

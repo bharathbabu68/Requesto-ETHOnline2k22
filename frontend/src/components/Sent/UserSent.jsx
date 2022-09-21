@@ -120,7 +120,7 @@ const UserSent = ({provider, signer}) => {
       )
     })}
 
-{!showLoadingInboxDialog  && !activeChat  && currentlySelectedRequestType=="crypto" && userNftRequests.length>0 && userCryptoRequests.map((request, index) => {
+{!showLoadingInboxDialog  && !activeChat  && currentlySelectedRequestType=="crypto" && userCryptoRequests.length>0 && userCryptoRequests.map((request, index) => {
       return (
         <CryptoRequestCard key={index} request={request} provider={provider} signer={signer} address={userAddressValue} showChat={showChat}/>
       )

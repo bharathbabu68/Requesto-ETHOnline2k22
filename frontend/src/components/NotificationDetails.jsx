@@ -73,7 +73,7 @@ const NotificationDetails = ({signer, requestId}) => {
                   messages.map((e) => {
                     console.log(e.message);
                     
-                    return (<div style={{height: "80px", borderRadius: "30px", color: "black"}}>{e.message}</div>)
+                    return (<div style={{height: "80px", borderRadius: "30px", color: "black", }}>{e.message}</div>)
                     
                   })
                 }

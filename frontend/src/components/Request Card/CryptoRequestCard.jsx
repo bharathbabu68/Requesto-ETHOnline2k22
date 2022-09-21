@@ -62,14 +62,20 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat}) => {
     </div>
     </Dialog>
     <div style={{backgroundColor: "black", padding:"2%", margin:"30px", borderRadius:"30px"}}>
-          <p>Request ID: {request._id}</p>
-          <p>Request Sender: {request.requestSender}</p>
+          {/* <p>Request ID: {request._id}</p> */}
+          {/* <p>Request Sender: {request.requestSender}</p> */}
           <p>Request Receiver: {request.requestReceiver}</p>
           <p>Request Type: {request.requestType}</p>
           <p>Chain: {request.chain}</p>
           <p>Additional Message: {request.additional_message}</p>
-          <p>Request Signature: {request.requestSignature}</p>
+          
           <p>Request Status: {request.requestStatus}</p>
+          <figure>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Twitter_Verified_Badge.svg/640px-Twitter_Verified_Badge.svg.png" alt="Portfolio Item"/>
+    <figcaption>
+      <p style={{wordBreak: "break-all", whiteSpace: "normal", fontSize: "8px"}}>Request Signature:<br></br> {request.requestSignature}</p>
+    </figcaption>
+</figure>
           {request.requestSender!=address && <Button label="Make Payment" onClick={async ()=>{
             await TransferCrypto(request.requestSender, request.amount, request.chain)
           }}/>}
@@ -81,7 +87,7 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat}) => {
           }}/>}
             {<Button style={{marginLeft:"30px"}} label="Share Request" onClick={async ()=>{
               setShowQr(true)
-          }}/>}
+          }}><i class="pi pi-link"></i></Button>}
         </div>
     </>
   )

@@ -85,3 +85,78 @@ background-blend-mode: multiply;
   transform: scale(1.02);
   cursor: pointer;
 }
+
+.chatbox {
+   /* fallback for old browsers */
+   background: #ebbba7;
+
+   /* Chrome 10-25, Safari 5.1-6 */
+   background: -webkit-linear-gradient(to right, rgba(235, 187, 167, 0.5), rgba(207, 199, 248, 0.5));
+ 
+   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+   background: linear-gradient(to right, rgba(235, 187, 167, 0.5), rgba(207, 199, 248, 0.5))
+}
+
+.textarea-container {
+  position: relative;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+  padding: 10px;
+  max-width: 1000px;
+  bottom: 0;
+}
+
+textarea {
+  background-color: transparent;
+  width: calc(100% - 25px);
+  border: none;
+  resize: none !important;
+  padding: 5px;
+}
+
+textarea:focus {
+  outline: none;
+}
+
+.chat-icon {
+ position: absolute;
+ bottom: 10px;
+ right: 10px;
+}
+
+figure {
+  float: left;
+  height: 3em;
+  margin: 1.5em;
+  width: 3em;
+  -webkit-transform: perspective(500);
+  -webkit-transform-style: preserve-3d;
+  -webkit-transition: .5s;
+}
+figure:hover {
+  -webkit-transform: perspective(500) rotateX(90deg) translateY(-3em) translateZ(3em);
+}
+img {
+  background-color: #222;
+  box-shadow: 0 20px 15px -10px hsla(0,0%,0%,.25);
+  display: block;
+  height: 100%;
+  -webkit-transition: .5s;
+}
+figure:hover img {
+  box-shadow: none;
+}
+figcaption {
+  background-color: #222;
+  color: #fff;
+  padding: 1.5em;
+  -webkit-transform: rotateX(-90deg);
+  -webkit-transform-origin: 100% 0;
+  -webkit-transition: .5s;
+}
+figure:hover figcaption {
+  box-shadow: 0 20px 15px -10px hsla(0,0%,0%,.25);
+}
+h3 {
+  font-weight: bold;
+}

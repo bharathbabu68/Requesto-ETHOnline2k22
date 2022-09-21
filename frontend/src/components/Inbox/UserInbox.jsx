@@ -12,7 +12,7 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
   const [userNftRequests, setUserNftRequests] = useState([])
   const [userCryptoRequests, setUserCryptoRequests] = useState([])
   const [showLoadingInboxDialog, setShowLoadingInboxDialog] = useState(false)
-  const [currentlySelectedRequestType, setCurrentlySelectedRequestType] = useState("nft")
+  const [currentlySelectedRequestType, setCurrentlySelectedRequestType] = useState("crypto")
   const [userAddressValue, setUserAddressValue] = useState("")
   const [deleted, setDeleted] = useState(0)
   const [activeChat, setActiveChat] = useState(null)
@@ -131,7 +131,16 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
     console.log(nft_requests)
     console.log(crypto_requests)
     setShowLoadingInboxDialog(false)
+    setUserNftRequests(nft_requests)
+    setUserCryptoRequests(crypto_requests)
   }
+
+  console.log(userCryptoRequests);
+  console.log(userNftRequests);
+  console.log(currentlySelectedRequestType);
+  console.log(activeChat);
+  console.log(showLoadingInboxDialog);
+  console.log(showLoadingInboxDialog);
 
 
   return (
@@ -150,12 +159,13 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
 
     {/* render NFT requests */}
     {!showLoadingInboxDialog  && !activeChat && currentlySelectedRequestType=="nft" && userNftRequests.length>0 && userNftRequests.map((request, index) => {
+      console.log(request);
       return (
         <NFTRequestCard key={index} request={request} provider={provider} signer={signer} address={userAddressValue} ReloadComponentWhenDeleted={ReloadComponentWhenDeleted} showChat={showChat}/>
       )
     })}
 
-{!showLoadingInboxDialog  && !activeChat &&  currentlySelectedRequestType=="crypto" && userNftRequests.length>0 && userCryptoRequests.map((request, index) => {
+{!showLoadingInboxDialog  && !activeChat &&  currentlySelectedRequestType=="crypto" && userCryptoRequests.length>0 && userCryptoRequests.map((request, index) => {
       return (
         <CryptoRequestCard key={index} request={request} provider={provider} signer={signer} address={userAddressValue} ReloadComponentWhenDeleted={ReloadComponentWhenDeleted} showChat={showChat}/>
       )
