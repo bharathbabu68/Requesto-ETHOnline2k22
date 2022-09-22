@@ -21,6 +21,13 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
     getAllUserRequests()
   }, [deleted])
 
+  async function toggleRequestTypes(){
+    if(currentlySelectedRequestType == "nft"){
+      setCurrentlySelectedRequestType("crypto")
+    } else {
+      setCurrentlySelectedRequestType("nft")
+    }
+  }
 
   async function showChat(req){
     setActiveChat(req)
@@ -153,6 +160,9 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
 
     <h3>Inbox</h3>
     <h6>Displaying your inbox of {currentlySelectedRequestType} requests</h6>
+    <Button label="Toggle between crypto & NFT requests" onClick={async ()=>{
+        toggleRequestTypes()
+      }} />
 
     {!showLoadingInboxDialog && !activeChat && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <p>No NFT Requests Received Till Now</p>}
     {!showLoadingInboxDialog  && !activeChat && currentlySelectedRequestType=="crypto" && userCryptoRequests.length==0 && <p>No Crypto Requests Received Till Now</p>}

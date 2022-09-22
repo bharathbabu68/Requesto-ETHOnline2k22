@@ -26,6 +26,14 @@ const UserSent = ({provider, signer}) => {
     setActiveChat(req)
   }
 
+  async function toggleRequestTypes(){
+    if(currentlySelectedRequestType == "nft"){
+      setCurrentlySelectedRequestType("crypto")
+    } else {
+      setCurrentlySelectedRequestType("nft")
+    }
+  }
+
   async function closeChat(){
     setActiveChat(null)
   }
@@ -109,6 +117,11 @@ const UserSent = ({provider, signer}) => {
 
     <h3>Sent Requests</h3>
     <h6>Displaying your sent {currentlySelectedRequestType} requests</h6>
+
+    <Button label="Toggle between crypto & NFT requests" onClick={async ()=>{
+        toggleRequestTypes()
+      }} />
+
 
     {!showLoadingInboxDialog  && !activeChat  && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <p>No NFT Requests Sent Till Now</p>}
     {!showLoadingInboxDialog  && !activeChat  && currentlySelectedRequestType=="crypto" && userCryptoRequests.length==0 && <p>No Crypto Requests Sent Till Now</p>}
