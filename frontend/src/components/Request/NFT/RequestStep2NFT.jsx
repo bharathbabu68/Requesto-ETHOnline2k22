@@ -80,7 +80,7 @@ const RequestStep2NFT = ({nftResponseEthereum, nftResponsePolygon, receiver_addr
     </Col>
     <Col md={3}>
     <a href={imageMetaData}><h6>NFT Metadata</h6></a>
-    <Image width="140" src={imageMetaData} alt="Image Text" />
+    <Image width="140" style={{objectFit:"cover"}} src={imageMetaData} alt="Image Text" />
     </Col>
     </Row>
     <Row style={{textAlign:"center", marginLeft:"4%"}}>

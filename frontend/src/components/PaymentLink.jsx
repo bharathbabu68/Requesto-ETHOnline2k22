@@ -167,7 +167,6 @@ const PaymentLink = ({request_id_to_fetch}) => {
         {signer && showInbox && <UserInbox provider={provider} signer={signer} request_id_to_fetch={request_id_to_fetch}/>}
         {showInbox && !signer && !request_id_to_fetch && <h3 style={{marginTop:"10%"}}>Please Connect Wallet to view Inbox</h3>}
         {showInbox && !signer && request_id_to_fetch && <h3 style={{marginTop:"10%"}}>Please Connect Wallet to view Received Request</h3>}
-        {signer && showSent && <UserSent provider={provider} signer={signer}/>}
         {showSent && !signer && <h3 style={{marginTop:"10%"}}>Please Connect Wallet to view Sent Requests</h3>}
         {showCreateRequest && <CreateRequest provider={provider} signer={signer}/>}
         {showNotificationDetails && <NotificationDetails signer={signer} requestID={requestId} />}

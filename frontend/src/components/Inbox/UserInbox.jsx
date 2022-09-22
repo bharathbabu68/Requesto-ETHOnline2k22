@@ -16,6 +16,7 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
   const [userAddressValue, setUserAddressValue] = useState("")
   const [deleted, setDeleted] = useState(0)
   const [activeChat, setActiveChat] = useState(null)
+  const [foundStatus, setFoundStatus] = useState(false)
 
   useEffect(() => {
     getAllUserRequests()
@@ -106,12 +107,14 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
     // check if nft_requests has a request with _id = request_id_to_fetch
     var found = false
     if(request_id_to_fetch){
+      console.log("There is a request id to fetch", request_id_to_fetch)
       for(var i=0; i<nft_requests.length; i++){
         if(nft_requests[i]._id == request_id_to_fetch){
           nft_requests = [nft_requests[i]]
           // set currently selected request type to nft
           setCurrentlySelectedRequestType("nft")
           found = true
+          setFoundStatus(true)
           break
         }
       }
@@ -121,6 +124,7 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
           crypto_requests = [crypto_requests[i]]
           // set currently selected request type to crypto
           found = true
+          setFoundStatus(true)
           setCurrentlySelectedRequestType("crypto")
           break
         }
@@ -130,6 +134,7 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
       // set currently 
     setUserNftRequests(nft_requests)
     setUserCryptoRequests(crypto_requests)
+    console.log("Found status: ", found)
     if(request_id_to_fetch && !found){
       setUserNftRequests([])
       setUserCryptoRequests([])
@@ -138,16 +143,7 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
     console.log(nft_requests)
     console.log(crypto_requests)
     setShowLoadingInboxDialog(false)
-    setUserNftRequests(nft_requests)
-    setUserCryptoRequests(crypto_requests)
   }
-
-  console.log(userCryptoRequests);
-  console.log(userNftRequests);
-  console.log(currentlySelectedRequestType);
-  console.log(activeChat);
-  console.log(showLoadingInboxDialog);
-  console.log(showLoadingInboxDialog);
 
 
   return (
@@ -158,14 +154,16 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
     <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"/>
     </Dialog>
 
-    <h3>Inbox</h3>
-    <h6>Displaying your inbox of {currentlySelectedRequestType} requests</h6>
-    <Button label="Toggle between crypto & NFT requests" onClick={async ()=>{
+    {!request_id_to_fetch && <h3>Inbox</h3>}
+    {!request_id_to_fetch && <h6>Displaying your inbox of {currentlySelectedRequestType} requests</h6>}
+    {!request_id_to_fetch && <Button label="Toggle between crypto & NFT requests" onClick={async ()=>{
         toggleRequestTypes()
-      }} />
+      }} />}
 
-    {!showLoadingInboxDialog && !activeChat && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <p>No NFT Requests Received Till Now</p>}
-    {!showLoadingInboxDialog  && !activeChat && currentlySelectedRequestType=="crypto" && userCryptoRequests.length==0 && <p>No Crypto Requests Received Till Now</p>}
+    {!showLoadingInboxDialog && !request_id_to_fetch && !activeChat && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <p>No NFT Requests Received Till Now</p>}
+    {!showLoadingInboxDialog && !request_id_to_fetch  && !activeChat && currentlySelectedRequestType=="crypto" && userCryptoRequests.length==0 && <p>No Crypto Requests Received Till Now</p>}
+
+    {!foundStatus && !showLoadingInboxDialog && request_id_to_fetch  && !activeChat && <p>Your request could not be retrieved !</p>}
 
     {/* render NFT requests */}
     {!showLoadingInboxDialog  && !activeChat && currentlySelectedRequestType=="nft" && userNftRequests.length>0 && userNftRequests.map((request, index) => {
