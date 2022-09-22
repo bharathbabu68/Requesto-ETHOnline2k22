@@ -80,7 +80,7 @@ const ChatWindow = ({provider, signer, request, closeChat}) => {
       // msgs.push(message)
       let M = msgs
       M.push(message)
-      setMessages([...M])
+      setMessages([...M, ])
       // console.log(msgs)
       var elem = document.getElementById('chatwindow');
       if(elem)
