@@ -160,3 +160,35 @@ figure:hover figcaption {
 h3 {
   font-weight: bold;
 }
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #d4aa70;
+  border-radius: 100px;
+}
+.avatarS {
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-left: auto;
+  margin-right: -15px;
+}
+
+.avatarR {
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: auto;
+  margin-left: -30px;
+  margin-top: -20px;
+}

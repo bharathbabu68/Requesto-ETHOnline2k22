@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { Client } from '@xmtp/xmtp-js'
+import Spinner from 'react-bootstrap/Spinner';
 
 const ChatWindow = ({provider, signer, request, closeChat}) => {
 
@@ -13,6 +14,7 @@ const ChatWindow = ({provider, signer, request, closeChat}) => {
   const [conversation, setConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [address_chatting_with, setAddressChattingWith] = useState(null);
+  const [loading, setLoader] = useState(true);
 
 
   useEffect( () => {
@@ -34,18 +36,31 @@ const ChatWindow = ({provider, signer, request, closeChat}) => {
       address_chatting_with
     )
     setConversation(conversation)
-    const messages = await conversation.messages() // get all messages
-    setMessages(messages)
+    const msgs = await conversation.messages() // get all messages
+    setMessages(msgs)
+    setLoader(false)
+    var elem = document.getElementById('chatwindow');
+    elem.scrollTop = elem.scrollHeight;
 
     for await (const message of await conversation.streamMessages()) {
       console.log(`[${message.senderAddress}]: ${message.content}`)
-      setMessages([...messages, message])
+      // msgs.push(message)
+      let M = msgs
+      M.push(message)
+      setMessages([...M])
+      // console.log(msgs)
+      var elem = document.getElementById('chatwindow');
+      elem.scrollTop = elem.scrollHeight;
     }
   }
 
   async function sendMessage() {
     // Send a message
     await conversation.send(chatboxMsg);
+    // messages.push(chatboxMsg);
+    // setChatMsg("");
+    var elem = document.getElementById('chatwindow');
+    elem.scrollTop = elem.scrollHeight;
 
   }
 
@@ -53,6 +68,13 @@ const ChatWindow = ({provider, signer, request, closeChat}) => {
     // console.log(event);
     setChatMsg(event?.target?.value);
   }
+
+  const onPressEnter = ({ key }) => {
+    if (key === "Enter") {
+      sendMessage();
+      return false;
+    }
+  };
 
   return (
     <>
@@ -62,21 +84,32 @@ const ChatWindow = ({provider, signer, request, closeChat}) => {
       {/* <br></br> */}
       <h2 style={{color: "black", textAlign: "left"}}>Chat:</h2>
       <hr style={{borderTop: "5px"}}></hr>
-      <div style={{minHeight: "300px",maxHeight: "300px", overflowY: "scroll"}}>
+      <div id="chatwindow" style={{minHeight: "300px",maxHeight: "300px", overflowY: "scroll"}} class="scrollbar">
           <div>
+          {
+            loading && (
+              <Spinner animation="grow" role="status" size="xl" variant="dark">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            )
+          }
           {messages.map((e) => {
               return (
                 <>
               {e.senderAddress==accountAddr && <div key={e.message} style={{height: "50px", borderRadius: "30px", color: "white", 
               backgroundColor: "#304157", borderBottomRightRadius: "0px", width: "fit-content", minWidth: "50px",
-              padding: "10px", paddingBottom: "0px", margin: "5px" ,marginLeft:"700px"}}>
-                {e.message || e.content}</div>}
+              padding: "10px", paddingBottom: "0px", margin: "5px" ,marginLeft: "auto", marginRight: "20px"}}>
+                {e.message || e.content}
+                <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" class="avatarS" />
+              </div>}
 
 
               {e.senderAddress!=accountAddr && <div key={e.message} style={{height: "50px", borderRadius: "30px", color: "white", 
               backgroundColor: "#783f8f", borderBottomLeftRadius: "0px", width: "fit-content", minWidth: "50px",
-              padding: "10px", paddingBottom: "0px", margin: "5px"}}>
-                {e.message || e.content}</div>}
+              padding: "10px", paddingBottom: "0px", margin: "5px", marginLeft: "20px"}}>
+                {e.message || e.content}
+                <img src="https://www.w3schools.com/howto/img_avatar2.png" alt="Avatar" class="avatarR" />  
+              </div>}
               
               </>
               )
@@ -84,7 +117,7 @@ const ChatWindow = ({provider, signer, request, closeChat}) => {
           </div>
       </div>
       <div class="textarea-container">
-        <textarea onChange={handleChange} style={{width: "100%", height: "35px"}} placeholder="Start typing here..."></textarea>
+        <textarea onKeyUp={onPressEnter} onBlur={handleChange} style={{width: "100%", height: "35px"}} placeholder="Start typing here..."></textarea>
         <i onClick={sendMessage} class="chat-icon pi pi-send" style={{color: "blue", fontSize: "22px"}}></i>
       </div>
 
