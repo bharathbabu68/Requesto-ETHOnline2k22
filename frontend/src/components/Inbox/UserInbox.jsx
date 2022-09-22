@@ -154,8 +154,6 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
     <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"/>
     </Dialog>
 
-    {!request_id_to_fetch && !activeChat && <h3>Inbox</h3>}
-    {!request_id_to_fetch && !activeChat && <h6>Displaying your inbox of {currentlySelectedRequestType} requests</h6>}
     {!request_id_to_fetch && !activeChat && <Button label="Toggle between crypto & NFT requests" onClick={async ()=>{
         toggleRequestTypes()
       }} />}
