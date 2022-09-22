@@ -37,7 +37,7 @@ const ChatWindow = ({provider, signer, request, closeChat}) => {
     )
     setConversation(conversation)
     const msgs = await conversation.messages() // get all messages
-    setMessages(msgs)
+    setMessages(msgs.slice(-10))
     setLoader(false)
     var elem = document.getElementById('chatwindow');
     elem.scrollTop = elem.scrollHeight;
@@ -47,7 +47,7 @@ const ChatWindow = ({provider, signer, request, closeChat}) => {
       // msgs.push(message)
       let M = msgs
       M.push(message)
-      setMessages([...M])
+      setMessages([...M, ])
       // console.log(msgs)
       var elem = document.getElementById('chatwindow');
       elem.scrollTop = elem.scrollHeight;
