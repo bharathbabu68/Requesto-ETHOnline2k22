@@ -11,6 +11,8 @@ router.post("/createBatchRequests", requestController.createBatchRequests)
 
 router.post("/rejectNftRequest", requestController.rejectNftRequest)
 
+router.post("/rejectCryptoRequest", requestController.rejectCryptoRequest)
+
 router.get("/getReceivedRequests/:id", requestController.getReceivedRequests)
 
 router.get("/getSentRequests/:id", requestController.getSentRequests)

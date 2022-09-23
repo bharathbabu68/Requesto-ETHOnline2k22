@@ -112,6 +112,39 @@ const sendTargetedNotificationRejectNFT = async (contract_Address, token_id, cha
     }
 }
 
+const sendTargetedNotificationRejectCrypto = async (chain, amount, rejector, rejected_address) => {
+  try {
+
+      image_url = "https://requesto.infura-ipfs.io/ipfs/QmdUCaqRiN5R6WfJBMJrAwtW7iFD9R87kqby9jeG8ZjGzj"
+      const apiResponse = await EpnsAPI.payloads.sendNotification({
+        signer,
+        type: 3, // target
+        identityType: 2, // direct payload
+        notification: {
+          title: `Payment Request Rejected`,
+          body: `${rejector} rejected your payment request for ${amount} ${chain} on Requesto platform`,
+        },
+        payload: {
+          title: `Payment Request Rejected`,
+          body: `${rejector} rejected your payment request for ${amount} ${chain} on Requesto platform`,
+          cta: ``,
+          img: image_url
+        },
+        recipients: `eip155:42:${rejected_address}`, // recipient address
+        channel: `eip155:80001:${process.env.EPNS_CHANNEL_ADDR}`, // your channel address
+        env: 'staging'
+      });
+      
+      // apiResponse?.status === 204, if sent successfully!
+      // console.log('API response: ', apiResponse);
+      if(apiResponse?.status === 204){
+          console.log("Notification sent successfully!")
+      }
+    } catch (err) {
+      console.error('Error: ', err);
+    }
+}
+
 const sendSubsetNotificationCrypto = async (sender_address, receiver_addresses, chain, amount) => {
     try {
       var image_url, currency_symbol;
@@ -147,4 +180,4 @@ const sendSubsetNotificationCrypto = async (sender_address, receiver_addresses, 
   }
 }
 
-module.exports = {sendTargetedNotificationNFT, sendTargetedNotificationCrypto, sendSubsetNotificationCrypto, sendTargetedNotificationRejectNFT}
+module.exports = {sendTargetedNotificationNFT, sendTargetedNotificationCrypto, sendSubsetNotificationCrypto, sendTargetedNotificationRejectNFT, sendTargetedNotificationRejectCrypto}

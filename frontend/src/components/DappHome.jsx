@@ -55,12 +55,24 @@ const DappHome = ({request_id_to_fetch}) => {
       // await localStorage.removeItem("WEB3_CONNECT_CACHED_PROVIDER")
       console.log("Printing props request ID: ", request_id_to_fetch)
       const connection = await web3Modal.connect()
-      const provider = new ethers.providers.Web3Provider(connection)
+      // The "any" network will allow spontaneous network changes
+      const provider = new ethers.providers.Web3Provider(connection, "any");
+      provider.on("network", (newNetwork, oldNetwork) => {
+          // When a Provider makes its initial connection, it emits a "network"
+          // event with a null oldNetwork along with the newNetwork. So, if the
+          // oldNetwork exists, it represents a changing network
+          var new_signer = provider.getSigner()
+          setProvider(provider)
+          setSigner(new_signer)
+          // if (oldNetwork) {
+          //     window.location.reload();
+          // }
+      });
       console.log("Provider", provider)
       const _signer = provider.getSigner()
       const account = await _signer.getAddress()
-      var account_trimmed = account.substring(0, 5) + "..." + account.substring(account.length - 5, account.length)
-      var already_subscribed = true
+      var account_trimmed = account.substring(0, 4) + "..." + account.substring(account.length - 4, account.length)
+      var already_subscribed = false
       if(!already_subscribed){
         const subscriptions = await EpnsAPI.user.getSubscriptions({
           user: `eip155:42:${account}`, // user address in CAIP

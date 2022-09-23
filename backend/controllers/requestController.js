@@ -86,7 +86,7 @@ const createRequest = async (req, res)=>{
                 requestSignature: req.body.requestSignature,
                 requestStatus: "sent"
             })
-            notificationController.sendTargetedNotificationCrypto(req.body.requestSender, req.body.requestReceiver, data_json.chain, data_json.amount)
+            notificationController.sendTargetedNotificationRejectCrypto(req.body.requestSender, req.body.requestReceiver, data_json.chain, data_json.amount)
             await newRequest.save()
             res.send("Payment request sent")
         }
@@ -225,6 +225,49 @@ const rejectNftRequest = async (req, res)=>{
     }
 }
 
+
+const rejectCryptoRequest = async (req, res)=>{
+    try {
+        // verify signature
+        const signature = req.body.requestSignature
+        const requestId = req.body.requestId
+        const message = req.body.message
+        const chain = req.body.chain
+        const amount = req.body.amount
+        let abi = [
+            "function verifyString(string, uint8, bytes32, bytes32) public pure returns (address)"
+        ];
+        let contractAddress = process.env.SIGNATURE_VERIFIER_CONTRACT_ADDRESS
+        const provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_TESTNET_INFURA_ENDPOINT);
+        let contract = new ethers.Contract(contractAddress, abi, provider);
+        // let sig = ethers.utils.splitSignature(signature);
+        let sig;
+        try {
+            sig = ethers.utils.splitSignature(signature);
+        }
+        catch (err) {
+            res.status(400)
+            res.send("Signature Validation Failed - Invalid Signature")
+        }
+        let recovered = await contract.verifyString(message, sig.v, sig.r, sig.s);
+        if(recovered != req.body.requestReceiver){
+            res.status(400);
+            res.send("Signature Validation Failed - Invalid Sender")
+        }
+
+        notificationController.sendTargetedNotificationRejectCrypto(chain, amount, req.body.requestReceiver, req.body.requestSender)
+
+        await Request.deleteOne({_id: requestId})
+
+        res.send("Request rejected successfully")
+
+    }
+    catch(err){
+        console.error(err)
+    }
+
+}
+
 const getReceivedRequests = async (req, res) => {
     const user_addr = req.params.id
     const requests = await Request.find({requestReceiver: user_addr})
@@ -237,4 +280,4 @@ const getSentRequests = async (req, res) => {
     res.send(requests)
 }
 
-module.exports = {getAllRequests, createRequest, getReceivedRequests, getSentRequests, createBatchRequests, rejectNftRequest}
+module.exports = {getAllRequests, createRequest, getReceivedRequests, getSentRequests, createBatchRequests, rejectNftRequest, rejectCryptoRequest}

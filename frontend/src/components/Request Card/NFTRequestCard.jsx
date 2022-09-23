@@ -48,13 +48,23 @@ const NFTRequestCard = ({request, provider, signer, address, ReloadComponentWhen
     var content_to_sign = {
       "request_id": request.request_id,
       "request_sender_address": request.requestSender,
+      "request_receiver_address": request.requestReceiver,
+      "request_type": request.requestType,
       "nft_contract_address": request.nft_contract_address,
       "nft_token_id": request.nft_token_id,
       "chain": request.chain,
       "action": "reject"
     }
     console.log(JSON.stringify(content_to_sign))
-    const signature = await signer.signMessage(JSON.stringify(content_to_sign))
+    var signature;
+    try {
+       signature = await signer.signMessage(JSON.stringify(content_to_sign))
+    }
+    catch(err){
+      alert("User rejected the signature")
+      setRejectRequestStatus(false)
+      return
+    }
     const response = await fetch(`http://localhost:4000/api/requests/rejectNftRequest`,{
       method: 'POST',
       headers: {

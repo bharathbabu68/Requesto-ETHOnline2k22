@@ -115,12 +115,10 @@ const UserSent = ({provider, signer}) => {
     <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"/>
     </Dialog>
 
-    <h3>Sent Requests</h3>
-    <h6>Displaying your sent {currentlySelectedRequestType} requests</h6>
 
-    <Button label="Toggle between crypto & NFT requests" onClick={async ()=>{
+    {!activeChat && <Button style={{marginRight:"68%"}} label="Toggle between crypto & NFT requests" onClick={async ()=>{
         toggleRequestTypes()
-      }} />
+      }} />}
 
 
     {!showLoadingInboxDialog  && !activeChat  && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <p>No NFT Requests Sent Till Now</p>}
