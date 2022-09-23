@@ -1,5 +1,13 @@
 import WalletConnect from "@walletconnect/web3-provider";
 import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
+import UAuthSPA from '@uauth/js'
+import * as UAuthWeb3Modal from '@uauth/web3modal'
+
+const uauthOptions = {
+  clientID: process.env.REACT_APP_CLIENT_ID,
+  redirectUri: process.env.REACT_APP_REDIRECT_URI,
+  scope: 'openid wallet',
+}
 
 export const providerOptions = {
   walletlink: {
@@ -19,6 +27,12 @@ export const providerOptions = {
         80001: 'https://matic-mumbai.chainstacklabs.com"',
               },
               appName: "Web 3 Modal Demo", // Required
-    }
+    },
+  },
+  'custom-uauth': {
+    display: UAuthWeb3Modal.display,
+    connector: UAuthWeb3Modal.connector,
+    package: UAuthSPA,
+    options: uauthOptions,
   }
 };
