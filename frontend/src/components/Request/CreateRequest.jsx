@@ -13,6 +13,7 @@ import RequestStep2BroadcastCrypto from './Crypto/RequestStep2BroadcastCrypto';
 import RequestStep3SingleCrypto from './Crypto/RequestStep3SingleCrypto';
 import RequestStep3BroadcastCrypto from './Crypto/RequestStep3BroadcastCrypto';
 
+import { Resolution } from '@unstoppabledomains/resolution';
 import RequestComplete from './RequestComplete';
 import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -53,8 +54,8 @@ const CreateRequest = ({provider, signer}) => {
     const [cryptoReqReceiverAddress, setCryptoReqReceiverAddress] = useState()
 
 
-    const fetchNFTData = async (receiverAddress, chain) => {
-        const response = await fetch(`http://localhost:4000/api/nft/owned/${receiverAddress}/${chain}`,{
+    const fetchNFTData = async (raddress, chain) => {
+        const response = await fetch(`http://localhost:4000/api/nft/owned/${raddress}/${chain}`,{
         method: 'GET',
         headers: {
             'Content-Type' : 'application/json'
@@ -112,6 +113,31 @@ const CreateRequest = ({provider, signer}) => {
             }
             setReceiverAddress(address)
             receiverAddress1 = address
+
+        }
+    //////////////////////////////////////
+    // Unstoppable Domains (9 endings)
+    ////////////////////////////////////// 
+        else if(receiverAddress1.endsWith(".wallet") || receiverAddress1.endsWith(".crypto") ||
+            receiverAddress1.endsWith(".nft") || receiverAddress1.endsWith(".blockchain") ||
+            receiverAddress1.endsWith(".x") || receiverAddress1.endsWith(".bitcoin") ||
+            receiverAddress1.endsWith(".dao") || receiverAddress1.endsWith(".888") || 
+            receiverAddress1.endsWith(".zil")){
+
+            const resolution = new Resolution();
+            var domain = receiverAddress1;
+            var currency = "ETH";
+            var address;
+            try{
+                address = await resolution.addr(domain, currency);
+                setReceiverAddress(address)
+                receiverAddress1 = address
+                console.log("Address resolved to: ", address)
+            }catch(err) {
+                setFetchNFTStatus("Invalid Unstoppable domain")
+                setFetchNftLoader(false)
+                return
+            }
 
         }
 

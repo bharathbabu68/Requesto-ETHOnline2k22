@@ -3,6 +3,7 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { RadioButton } from 'primereact/radiobutton';
 import { ethers } from 'ethers'
+import { Resolution } from '@unstoppabledomains/resolution';
 
 const RequestStep2BroadcastCrypto = ({completeStep2BatchRequestCrypto}) => {
   const [cryptoRequestAddresses, setCryptoRequestAddresses] = useState('')
@@ -47,6 +48,27 @@ const RequestStep2BroadcastCrypto = ({completeStep2BatchRequestCrypto}) => {
             console.log("Address resolved to: ", address)
           }
       }
+      else if(cryptoAddresses[i].endsWith(".wallet") || cryptoAddresses[i].endsWith(".crypto") ||
+              cryptoAddresses[i].endsWith(".nft") || cryptoAddresses[i].endsWith(".blockchain") ||
+              cryptoAddresses[i].endsWith(".x") || cryptoAddresses[i].endsWith(".bitcoin") ||
+              cryptoAddresses[i].endsWith(".dao") || cryptoAddresses[i].endsWith(".888") || 
+              cryptoAddresses[i].endsWith(".zil")){
+
+        const resolution = new Resolution();
+        var domain = cryptoAddresses[i];
+        var currency = "ETH";
+        var address;
+        try{
+          address = await resolution.addr(domain, currency);
+          cryptoAddresses[i] = address;
+          console.log("Address resolved to: ", address)
+        }catch(err) {
+          alert("Invalid Unstoppable domain: " + err)
+          setLoadingStatus(false)
+          return
+        }
+
+      }
       else {
         var isValidAddress =  ethers.utils.isAddress(cryptoAddresses[i])
         if(!isValidAddress){
@@ -73,8 +95,8 @@ const RequestStep2BroadcastCrypto = ({completeStep2BatchRequestCrypto}) => {
     <>
     <h3>Step 2 - Crypto Request (Batch Request)</h3>
     <br />
-    <h6>Enter list of addresses or ENS domains to send your payment request to separated by a comma</h6>
-    <InputText placeholder="Enter list of addresses or ENS domains separated by a comma" style={{width:"100%"}} value={cryptoRequestAddresses} onChange={(e) => setCryptoRequestAddresses(e.target.value)} />
+    <h6>Enter list of addresses / ENS / Unstoppable domains to send your payment request to separated by a comma</h6>
+    <InputText placeholder="Enter list of addresses / ENS / Unstoppable domains separated by a comma" style={{width:"100%"}} value={cryptoRequestAddresses} onChange={(e) => setCryptoRequestAddresses(e.target.value)} />
     <br />
     <br />
     <h6>Choose chain & crypto to request</h6>

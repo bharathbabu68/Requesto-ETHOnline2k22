@@ -37,6 +37,8 @@ const DappHome = ({request_id_to_fetch}) => {
     const [sentButtonBorder, setSentButtonBorder] = useState("none")
     const [createRequestButtonBorder, setCreateRequestButtonBorder] = useState("3px solid white")
     const [connectWalletStatus, setConnectWalletStatus] = useState("Connect Wallet")
+    const [walletProvider, setWalletProvider] = useState("")
+    const [domain, setDomain] = useState("")
 
     const [provider, setProvider] = useState()
     const [signer, setSigner] = useState()
@@ -50,13 +52,14 @@ const DappHome = ({request_id_to_fetch}) => {
     });
 
     async function connectWallet() {
+      // await localStorage.removeItem("WEB3_CONNECT_CACHED_PROVIDER")
       console.log("Printing props request ID: ", request_id_to_fetch)
       const connection = await web3Modal.connect()
       const provider = new ethers.providers.Web3Provider(connection)
       console.log("Provider", provider)
       const _signer = provider.getSigner()
       const account = await _signer.getAddress()
-      var account_trimmed = account.substring(0, 4) + "..." + account.substring(account.length - 4, account.length)
+      var account_trimmed = account.substring(0, 5) + "..." + account.substring(account.length - 5, account.length)
       var already_subscribed = true
       if(!already_subscribed){
         const subscriptions = await EpnsAPI.user.getSubscriptions({
@@ -121,6 +124,39 @@ const DappHome = ({request_id_to_fetch}) => {
         return
       }
       setConnectWalletStatus("Connected: " + account_trimmed)
+      
+      ////////////////////////////////////
+      // UD Reverse Lookup
+      // Uncomment after getting API keys
+      ///////////////////////////////////
+
+      // var res = fetch(`https://resolve.unstoppabledomains.com/reverse/${account}`)
+      // res.then( (domain) => {
+      //   console.log(domain)
+      //   setDomain(domain)
+      // } ).catch((err) => console.log(err))
+
+      
+      /////////////////////////////////////
+      // Wallet Provider from LOCALstorage
+      ////////////////////////////////////
+
+      // var wProvider;
+      // for(let i=0; i<50;i++){
+      //   wProvider = localStorage.getItem("WEB3_CONNECT_CACHED_PROVIDER").replaceAll('"', '')
+      // }
+      // console.log(wProvider)
+      // var wallet;
+      // if(wProvider.localeCompare('custom-uauth'))
+      //   wallet = "Unstoppable Domain Connected"
+      // else if(wProvider.localeCompare('injected'))
+      //   wallet = "Metamask Connected"
+      // else
+      //   wallet = "Wallet Connected"
+      // var wallet = wProvider.localeCompare("custom-uauth") ? "Unstoppable Domain Connected" : 
+      //             wProvider === "injected" ? "Metamask Connected" : "Wallet Connected";
+      // console.log(wallet)
+      // setWalletProvider(wallet)
       setProvider(provider)
       setSigner(_signer)
       setAddress(account)
@@ -188,9 +224,14 @@ const DappHome = ({request_id_to_fetch}) => {
             </Row>
       </Col>
       <Col md={2} style={{paddingTop:"10px", textAlign:"right"}}>
-      <Button onClick = {()=>{
-        connectWallet()
-      }} label={connectWalletStatus} className="p-button-rounded p-button-sm" />
+        <Button onClick = {()=>{
+          connectWallet()
+        }} className="p-button-rounded p-button-sm">
+            <Row style={{width: "170px"}}>
+              <b>{connectWalletStatus}</b>
+              <i style={{fontSize: "10px"}}>{domain}</i>
+            </Row>
+          </Button>
       </Col>
       </Row>
       <div style={{color:"white", textAlign:"center", margin:"7%", marginTop:"1%", paddingTop:"2%", paddingBottom:"2%"}}>

@@ -12,8 +12,8 @@ const RequestStep1NFT = ({completestep1}) => {
     <h3>NFT Request - Step 1</h3>
         <br />
         <div>
-        <h6>Enter Address of Receiver or ENS domain</h6>
-        <InputText placeholder="Enter Receiver Address or ENS domain" style={{width:"100%"}} value={receiverAddress} onChange={(e) => setReceiverAddress(e.target.value)} />
+        <h6>Enter Address of Receiver / ENS / Unstoppable domain to request from:</h6>
+        <InputText placeholder="Enter Receiver Address / ENS / Unstoppable domain" style={{width:"100%"}} value={receiverAddress} onChange={(e) => setReceiverAddress(e.target.value)} />
         </div>
         <br />
         <br />

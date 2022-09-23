@@ -3,6 +3,10 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { RadioButton } from 'primereact/radiobutton';
 import { ethers } from 'ethers'
+import { Resolution } from '@unstoppabledomains/resolution';
+import ReactTooltip from 'react-tooltip';
+// const {default: Resolution} = require('@unstoppabledomains/resolution');
+
 
 const RequestStep2SingleCrypto = ({completeStep2SingleRequestCrypto}) => {
   
@@ -10,6 +14,7 @@ const RequestStep2SingleCrypto = ({completeStep2SingleRequestCrypto}) => {
   const [cryptoRequestAmount, setCryptoRequestAmount] = useState('')
   const [cryptoRequestCurrency, setCryptoRequestCurrency] = useState('')
   const [loadingStatus, setLoadingStatus] = useState(false)
+  
 
   async function validateCryptoRequest() {
     // check if cryptoRequestAmount is a number
@@ -20,7 +25,9 @@ const RequestStep2SingleCrypto = ({completeStep2SingleRequestCrypto}) => {
       return
     }
 
-    // check if cryptoRequestAddress ends with .eth
+    /////////////////////////////////////////
+    // ENS Domains (1 ending)
+    /////////////////////////////////////////
     if(cryptoRequestAddress.endsWith(".eth")){
       // check if ens domain is valid
       const provider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_INFURA_ETHEREUM_ENDPOINT);
@@ -33,6 +40,29 @@ const RequestStep2SingleCrypto = ({completeStep2SingleRequestCrypto}) => {
         else{
           setCryptoRequestAddress(address)
           console.log("Address resolved to: ", address)
+        }
+
+    //////////////////////////////////////
+    // Unstoppable Domains (9 endings)
+    //////////////////////////////////////
+    } else if(cryptoRequestAddress.endsWith(".wallet") || cryptoRequestAddress.endsWith(".crypto") ||
+              cryptoRequestAddress.endsWith(".nft") || cryptoRequestAddress.endsWith(".blockchain") ||
+              cryptoRequestAddress.endsWith(".x") || cryptoRequestAddress.endsWith(".bitcoin") ||
+              cryptoRequestAddress.endsWith(".dao") || cryptoRequestAddress.endsWith(".888") || 
+              cryptoRequestAddress.endsWith(".zil")){
+
+        const resolution = new Resolution();
+        var domain = cryptoRequestAddress;
+        var currency = "ETH";
+        var address;
+        try{
+          address = await resolution.addr(domain, currency);
+          setCryptoRequestAddress(address)
+          console.log("Address resolved to: ", address)
+        }catch(err) {
+          alert("Invalid Unstoppable domain: " + err)
+          setLoadingStatus(false)
+          return
         }
 
     }
@@ -56,8 +86,8 @@ const RequestStep2SingleCrypto = ({completeStep2SingleRequestCrypto}) => {
     <>
     <h3>Step 2 - Crypto Request (Single)</h3>
     <br />
-    <h6>Enter address or ENS name that you want to request crypto from</h6>
-    <InputText placeholder="Enter address to request crypto from" style={{width:"100%"}} value={cryptoRequestAddress} onChange={(e) => setCryptoRequestAddress(e.target.value)} />
+    <h6 data-tip=".eth, .wallet, .crypto, .x, .nft etc">Enter Wallet Address / ENS / Unstoppable Domain name to request from:</h6>
+    <InputText placeholder="Wallet Address / ENS / Unstoppable Domain" style={{width:"100%"}} value={cryptoRequestAddress} onChange={(e) => setCryptoRequestAddress(e.target.value)} />
     <br />
     <br />
     <h6>Choose chain & crypto to request</h6>
@@ -81,7 +111,7 @@ const RequestStep2SingleCrypto = ({completeStep2SingleRequestCrypto}) => {
         }
         }}/>
     
-
+    <ReactTooltip />
     </>
   )
 }
