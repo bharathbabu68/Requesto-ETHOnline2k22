@@ -20,7 +20,6 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat}) => {
     }
   }
 
-
   async function TransferCrypto(sender, amount, chain) {
     var required_chain_id;
     if(chain=="ethereum")
@@ -71,6 +70,7 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat}) => {
     <div style={{ overflow:"hidden"}}>
     <QRCodeCanvas value={`http://localhost:3000/app/request/${request._id}`} />
     </div>
+    <a href={`http://localhost:3000/app/request/${request._id}`}>Payment Link</a>
     </Dialog>
     <div style={{backgroundColor: "#1f2937", margin:"30px", borderRadius:"30px", width: "100%",}}>
       <div style={{width: "100%", backgroundColor: "#141A23", height: "50px", borderRadius:"30px", borderBottomLeftRadius: "0px", borderBottomRightRadius: "0px"}}>
@@ -89,7 +89,7 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat}) => {
                 <br></br>
                 <h4> Request Amount: {request.amount} {currency()}</h4>
                 <hr />
-                <p> Chain: {request.chain.charAt(0).toUpperCase() + request.chain.slice(1)} <i class="pi pi-cloud"></i></p>
+                <p> Chain: {request.chain.charAt(0).toUpperCase() + request.chain.slice(1)} Testnet <i class="pi pi-cloud"></i></p>
                 <p> Message from Sender : {request.additional_message} </p>
                 <button style={{width: "90%", borderRadius:"30px"}} class="raise" onClick={()=>showChat(request)}><i class="pi pi-comments"></i> Chat with user</button>
          

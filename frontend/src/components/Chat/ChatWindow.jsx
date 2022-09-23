@@ -121,8 +121,7 @@ const ChatWindow = ({provider, signer, request, closeChat}) => {
     </Dialog>
     { !loading && <div>
     <div style={{width: "70%", borderRadius: "15px", padding: "25px", margin: "auto auto"}} class="card chatbox">
-      {/* <br></br> */}
-      <p style={{color: "black", textAlign: "left"}}><b>Chatting with {request.requestReceiver === accountAddr ? request.requestSender : request.requestReceiver} : Powered by XMTP</b></p>
+      <p style={{color: "green", textAlign: "left"}}><b>Chatting with {request.requestReceiver === accountAddr ? request.requestSender : request.requestReceiver} : Powered by XMTP</b>    <Button onClick = {()=>closeChat()} style={{marginLeft:"70px"}} icon="pi pi-times" className="p-button-rounded p-button-danger" aria-label="Cancel" /></p>
       <hr style={{borderTop: "5px"}}></hr>
       <div id="chatwindow" style={{minHeight: "300px",maxHeight: "300px", overflowY: "scroll", display: "flex", flexDirection: "column-reverse"}} class="scrollbar">
           <div>
@@ -164,9 +163,6 @@ const ChatWindow = ({provider, signer, request, closeChat}) => {
         <textarea onChange={handleChange} id="create-message-box" onKeyUp={onPressEnter} onBlur={handleChange} style={{width: "100%", height: "35px"}} placeholder="Start typing here..."></textarea>
         <i onClick={sendMessage} class="chat-icon pi pi-send" style={{color: "blue", fontSize: "22px", cursor:"pointer"}}></i>
       </div>
-      <Button style={{marginTop:"2%"}} onClick = {()=>{
-        closeChat()
-      }} label="Close Chat Window" className="p-button-rounded p-button-sm" />
 
     </div>
     </div>}
