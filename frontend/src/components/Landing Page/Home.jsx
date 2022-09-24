@@ -9,7 +9,7 @@ const Home = () => {
     <Container id='home' fluid style={{height:"880px", padding: "0px !important"}}>
       <Row>
       <Col md={10}>
-        <h3 style={{fontWeight:"bold", color:"white", paddingTop:"10px"}}>Request<div style={{display: "inline-flex"}} class="shaking"><span>o</span></div></h3>
+        <h3 style={{fontWeight:"bolder", color:"white", paddingTop:"10px", marginLeft:"10px", fontFamily:"Raleway"}}>Request<div style={{display: "inline-flex"}} class="shaking"><span>o</span></div></h3>
         {/* <div class="shaking"><span>o</span></div> */}
       </Col>
       <Col md={2} style={{paddingTop:"10px", textAlign:"right"}}>
@@ -20,7 +20,7 @@ const Home = () => {
       </Row>
       <div style={{textAlign:"center", marginTop:"160px"}}>
       <h1 style={{fontWeight:"bolder", color:"white", paddingTop:"10px", fontSize:"60px"}}>Your Gateway to Web3 Requests</h1>
-      <Row style={{marginTop:"40px"}}>
+      <Row style={{marginTop:"40px", fontFamily:"Raleway"}}>
         <Col md={4} style={{color: "white"}}>
           <div className="homepage-box" style={{border: "1px solid white", margin:"4%", height:"200px", borderRadius: "10px", padding:"5%"}}>
           <h2 style={{marginTop:"8%"}}>Request Crypto</h2>
