@@ -268,6 +268,67 @@ const rejectCryptoRequest = async (req, res)=>{
 
 }
 
+const confirmCryptoRequest = async (req, res)=>{
+    try {
+        const signature = req.body.requestSignature
+        const chain = req.body.chain
+        const amount = req.body.amount
+        const requestId = req.body.requestId
+        const message = req.body.message
+        const txHash = req.body.txHash
+
+        var chain_id;
+        if(chain=="MATIC"){
+            chain_id = 80001
+        }
+        else if(chain=="ETH"){
+            chain_id = 5
+        }
+
+        // make a call to covalent API to validate transaction hash
+        // make a call to covalent API 
+        const APIKEY = process.env.COVALENT_API_KEY
+        const baseURL = 'https://api.covalenthq.com/v1'
+        const ChainId = String(chain_id)
+        const url = new URL(`${baseURL}/${ChainId}/transaction_v2/${txHash}/?key=${APIKEY}`);
+        const response = await fetch(url);
+        const result = await response.json();
+        // console.log("Printing result of covalent API call")
+        // console.log(result)
+
+        try {
+            const data = result.data
+            const data_items = data.items
+            const from_address = data_items[0].from_address
+            if(from_address.toLowerCase() == req.body.requestReceiver.toLowerCase() && data_items[0].successful){
+                console.log("Sender is valid")
+            }
+            else{
+                console.log("Invalid sender")
+                res.status(400);
+                res.send("Invalid Sender")
+            }
+
+        }
+
+        catch(err){
+            console.log("Error: ", err)
+            res.status(400)
+            res.send("Invalid transaction hash")
+        }
+
+        await notificationController.sendTargetedNotificationCryptoSuccess(chain, amount, req.body.requestReceiver, req.body.requestSender)
+
+        await Request.deleteOne({_id: requestId})
+
+        res.send("Request confirmed successfully")
+
+    }
+    catch(err){
+        console.error(err)
+    }
+}
+
 const getReceivedRequests = async (req, res) => {
     const user_addr = req.params.id
     const requests = await Request.find({requestReceiver: user_addr})
@@ -280,4 +341,4 @@ const getSentRequests = async (req, res) => {
     res.send(requests)
 }
 
-module.exports = {getAllRequests, createRequest, getReceivedRequests, getSentRequests, createBatchRequests, rejectNftRequest, rejectCryptoRequest}
+module.exports = {getAllRequests, createRequest, getReceivedRequests, getSentRequests, createBatchRequests, rejectNftRequest, rejectCryptoRequest, confirmCryptoRequest}

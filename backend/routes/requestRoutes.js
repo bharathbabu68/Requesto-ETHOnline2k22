@@ -13,6 +13,8 @@ router.post("/rejectNftRequest", requestController.rejectNftRequest)
 
 router.post("/rejectCryptoRequest", requestController.rejectCryptoRequest)
 
+router.post("/confirmCryptoRequest", requestController.confirmCryptoRequest)
+
 router.get("/getReceivedRequests/:id", requestController.getReceivedRequests)
 
 router.get("/getSentRequests/:id", requestController.getSentRequests)

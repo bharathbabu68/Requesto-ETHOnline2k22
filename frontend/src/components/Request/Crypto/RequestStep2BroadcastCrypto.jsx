@@ -101,9 +101,9 @@ const RequestStep2BroadcastCrypto = ({completeStep2BatchRequestCrypto}) => {
     <br />
     <h6>Choose chain & crypto to request</h6>
     <RadioButton value="ethereum" onChange={(e) => {setCryptoRequestCurrency(e.value)}} checked={cryptoRequestCurrency === 'ethereum'} />
-    <label style={{marginLeft:"10px", marginRight:"20px"}} > Ethereum (ETH) </label>
+    <label style={{marginLeft:"10px", marginRight:"20px"}} >  Ethereum (Goerli Testnet) (ETH)</label>
     <RadioButton value="polygon" onChange={(e) => {setCryptoRequestCurrency(e.value)}} checked={cryptoRequestCurrency === 'polygon'} />
-    <label style={{marginLeft:"10px"}} > Polygon (MATIC) </label>
+    <label style={{marginLeft:"10px"}} > Polygon (Mumbai Testnet) (MATIC)</label>
     <br />
     <br />
     <h6>Enter amount you would like to request the above addresses !</h6>

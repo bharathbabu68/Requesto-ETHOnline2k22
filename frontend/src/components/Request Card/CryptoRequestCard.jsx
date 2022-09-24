@@ -15,12 +15,21 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat, Reload
   const [rejectRequestStatus, setRejectRequestStatus] = useState(false)
   const [TransferTextStatus, setTransferTextStatus] = useState('Confirm the transaction on your wallet')
   const [TransferSpinnerStatus, setTransferSpinnerStatus] = useState(false)
+  const [txHash, setTxHash] = useState('')
 
   function currency() {
     if(request.chain === "ethereum"){
       return "ETH"
     }else if(request.chain === "polygon"){
       return "MATIC"
+    }
+  }
+
+  function returnBlockExplorerUrl(txHash){
+    if(request.chain === "ethereum"){
+      return `https://goerli.etherscan.io/tx/${txHash}`
+    }else if(request.chain === "polygon"){
+      return `https://mumbai.polygonscan.com/tx/${txHash}`
     }
   }
 
@@ -67,6 +76,7 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat, Reload
           return
         }
       }
+      setTransferTextStatus('Confirm the transaction on your wallet')
     }try {
       const balance = await provider.getBalance(signer.getAddress())
       const balanceinEth = ethers.utils.formatEther(balance) 
@@ -82,11 +92,17 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat, Reload
       setTransferSpinnerStatus(false)
       return
     }
+    var tx
     try{
-      const tx = await signer.sendTransaction({
+        tx = await signer.sendTransaction({
         to: request.requestSender,
         value: ethers.utils.parseEther(request.amount)
       })
+      setTransferTextStatus('Transaction sent ! Waiting for it to be mined !')
+      await tx.wait()
+      console.log(tx)
+      setTxHash(tx.hash)
+      setTransferTextStatus("Transaction successful ! Notifying the sender ")
     }
     catch(err){
       console.error(err)
@@ -94,6 +110,47 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat, Reload
       setTransferSpinnerStatus(false)
       return
     }
+
+    // wait 5 seconds to let the transaction be mined
+    await new Promise(r => setTimeout(r, 5000));
+
+    // make request to backend and notify sender
+    var content_to_sign = {
+      "request_id": request.request_id,
+      "request_sender_address": request.requestSender,
+      "request_receiver_address": request.requestReceiver,
+      "request_type": request.requestType,
+      "request_amount": request.requestAmount,
+      "request_chain": request.chain,
+      "action": "confirm_payment"
+    }
+    var chain_val = currency()
+    const response = await fetch(`http://localhost:4000/api/requests/confirmCryptoRequest`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "requestId": request._id,
+          "requestSender": request.requestSender,
+          "requestReceiver": request.requestReceiver,
+          "message": JSON.stringify(content_to_sign),
+          "amount": request.amount,
+          "chain": chain_val,
+          "txHash": tx.hash
+    })})
+    if(response.status === 200){
+      setTransferTextStatus("Notified sender successfully ! Payment complete !")
+      setTransferSpinnerStatus(false)
+      // wait for 2 seconds
+      await new Promise(r => setTimeout(r, 2000));
+      ReloadComponentWhenDeleted()
+    }
+    else{
+      setTransferTextStatus("Error notifying sender ! Please contact support")
+      setTransferSpinnerStatus(false)
+    }
+
   }
 
 
@@ -138,6 +195,10 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat, Reload
       setRejectRequestStatus(false)
       ReloadComponentWhenDeleted()
     }
+    else {
+      alert("Error occured")
+      setRejectRequestStatus(false)
+    }
 
     
 
@@ -168,6 +229,7 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat, Reload
     <Dialog header="Processing your payment Request" visible={loadingTransferStatus} style={{ width: '30vw' }} onHide={() => {
   setLoadingTransferStatus(false)}}>
     <p>{TransferTextStatus}</p>
+    {TransferTextStatus == "Transaction successful !" ? <a href = {returnBlockExplorerUrl(txHash)} >View Transaction on Block Explorer</a> : ""}
     {TransferSpinnerStatus && <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"/>}
     </Dialog>
     <div style={{backgroundColor: "#1f2937", margin:"30px", borderRadius:"30px", width: "100%",paddingBottom:"15px"}}>

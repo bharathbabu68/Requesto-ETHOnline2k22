@@ -145,6 +145,39 @@ const sendTargetedNotificationRejectCrypto = async (chain, amount, rejector, rej
     }
 }
 
+const sendTargetedNotificationCryptoSuccess = async (chain, amount, crypto_sender, crypto_receiver) => {
+  try {
+
+    image_url = "https://requesto.infura-ipfs.io/ipfs/QmdUCaqRiN5R6WfJBMJrAwtW7iFD9R87kqby9jeG8ZjGzj"
+    const apiResponse = await EpnsAPI.payloads.sendNotification({
+      signer,
+      type: 3, // target
+      identityType: 2, // direct payload
+      notification: {
+        title: `Payment Request Fulfilled`,
+        body: `${crypto_sender} accepted your payment request for ${amount} ${chain} on the Requesto platform. Your payment has been sent to ${crypto_receiver}`,
+      },
+      payload: {
+        title: `Payment Request Fulfilled`,
+        body: `${crypto_sender} accepted your payment request for ${amount} ${chain} on the Requesto platform. Your payment has been sent to ${crypto_receiver}`,
+        cta: ``,
+        img: image_url
+      },
+      recipients: `eip155:42:${crypto_receiver}`, // recipient address
+      channel: `eip155:80001:${process.env.EPNS_CHANNEL_ADDR}`, // your channel address
+      env: 'staging'
+    });
+    
+    // apiResponse?.status === 204, if sent successfully!
+    // console.log('API response: ', apiResponse);
+    if(apiResponse?.status === 204){
+        console.log("Notification sent successfully!")
+    }
+  } catch (err) {
+    console.error('Error: ', err);
+  }
+}
+
 const sendSubsetNotificationCrypto = async (sender_address, receiver_addresses, chain, amount) => {
     try {
       var image_url, currency_symbol;
@@ -158,7 +191,7 @@ const sendSubsetNotificationCrypto = async (sender_address, receiver_addresses, 
       }
     const apiResponse = await EpnsAPI.payloads.sendNotification({
       signer,
-      type: 4, // target
+      type: 4, // subset
       identityType: 2, // direct payload
       notification: {
         title: `Payment Request (Batch)`,
@@ -180,4 +213,4 @@ const sendSubsetNotificationCrypto = async (sender_address, receiver_addresses, 
   }
 }
 
-module.exports = {sendTargetedNotificationNFT, sendTargetedNotificationCrypto, sendSubsetNotificationCrypto, sendTargetedNotificationRejectNFT, sendTargetedNotificationRejectCrypto}
+module.exports = {sendTargetedNotificationNFT, sendTargetedNotificationCrypto, sendSubsetNotificationCrypto, sendTargetedNotificationRejectNFT, sendTargetedNotificationRejectCrypto, sendTargetedNotificationCryptoSuccess}
