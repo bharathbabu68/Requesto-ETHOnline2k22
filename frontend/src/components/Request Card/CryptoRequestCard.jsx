@@ -125,7 +125,7 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat, Reload
       "action": "confirm_payment"
     }
     var chain_val = currency()
-    const response = await fetch(`http://localhost:4000/api/requests/confirmCryptoRequest`,{
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/requests/confirmCryptoRequest`,{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
