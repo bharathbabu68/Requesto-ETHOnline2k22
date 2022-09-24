@@ -442,3 +442,50 @@ background: linear-gradient(to right, #414345, #232526); /* W3C, IE 10+/ Edge, F
   background-color: #f6993f;
 }
 
+.btn-theme {
+  background: #1c95de;
+  font-size: 16px !important;
+  margin-top: 20% !important;
+  left: 43%
+}
+
+.btn-theme {
+  color: #FFF !important;
+  padding: 0.7rem 2.9rem;
+  font-weight: 400;
+  font-size: 0.875rem;
+  display: inline-block;
+  display: inline-flex;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 2;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  -webkit-box-shadow: 0px 14px 47px 0px rgba(28, 28, 28, 0.24);
+  -moz-box-shadow: 0px 14px 47px 0px rgba(28, 28, 28, 0.24);
+  box-shadow: 0px 14px 47px 0px rgba(28, 28, 28, 0.24);
+  -webkit-border-radius: 70px;
+  -moz-border-radius: 70px;
+  border-radius: 70px
+}
+
+.btn-theme i {
+  margin-right: 7px
+}
+
+.btn-theme.a {
+  color: #333;
+  text-decoration: none !important;
+  -webkit-transition: all 400ms ease-in-out;
+  -moz-transition: all 400ms ease-in-out;
+  -o-transition: all 400ms ease-in-out;
+  -ms-transition: all 400ms ease-in-out;
+  transition: all 400ms ease-in-out
+}
+
+.btn-theme:hover {
+  box-shadow: none
+}
