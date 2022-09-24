@@ -318,18 +318,29 @@ code {
   font: inherit;
 }
 
-h1 {
+.text-effect-1 {
   color: hsl(0, 0%, 100%);
   font-size: 50px;
   font-weight: bold;
   font-family: monospace;
   letter-spacing: 7px;
   text-transform: uppercase;
-}
-
-h1 {
   /* padding: 64px; */
   background: linear-gradient(to right, hsl(0, 0%, 76%) 0, hsl(0, 5%, 22%) 10%, hsl(0, 0%, 100%) 20%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 3s infinite linear;
+}
+
+.text-effect-2 {
+  color: hsl(0, 0%, 100%);
+  font-size: 50px;
+  font-weight: bold;
+  font-family: monospace;
+  letter-spacing: 7px;
+  text-transform: uppercase;
+  /* padding: 64px; */
+  background: linear-gradient(to right, hsl(0, 100%, 1%) 0, hsl(0, 4%, 95%) 10%, hsl(0, 100%, 1%) 20%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: shine 3s infinite linear;
@@ -445,7 +456,7 @@ background: linear-gradient(to right, #414345, #232526); /* W3C, IE 10+/ Edge, F
 .btn-theme {
   background: #1c95de;
   font-size: 16px !important;
-  margin-top: 20% !important;
+  margin-top: 4% !important;
   left: 43%
 }
 

@@ -6,6 +6,7 @@ import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
 // import { Image } from 'primereact/image';
 import { create as ipfsHttpClient } from 'ipfs-http-client'
+import ReactTooltip from 'react-tooltip';
 
 const RequestStep3NFT = ({receiver_address, nftContractAddress, nftTokenId, chain, tokenMetadata, provider, signer, completeStep3}) => {
   
@@ -97,7 +98,7 @@ const RequestStep3NFT = ({receiver_address, nftContractAddress, nftTokenId, chai
       <p>{receiver_address}</p>
       <h6>Contract Address</h6>
       <p>{nftContractAddress}</p>
-      <p>Token ID: {nftTokenId}</p>
+      <p data-tip = {nftTokenId}>Token ID: {nftTokenId.length > 50 ? nftTokenId.slice(0, 50) : nftTokenId} {nftTokenId.length > 50 ? "..." : ""}</p>
       <p>Chain: {chain}</p>
       <p>Metadata: <a href={tokenMetadata}>Metadata URL</a></p>
       <p>Marketplaces Link to this NFT: <a href={`https://opensea.io/assets/${chain=="ethereum"?"ethereum":"matic"}/${nftContractAddress}/${nftTokenId}`}>Opensea</a> , <a href={`https://rarible.com/token/${chain=="polygon"?"polygon/":""}${nftContractAddress}:${nftTokenId}?tab=overview`}>Rarible</a></p>
@@ -111,6 +112,7 @@ const RequestStep3NFT = ({receiver_address, nftContractAddress, nftTokenId, chai
       <Button label="Confirm and Send" onClick={async ()=>{
         sendNFTRequest()
       }} />
+      <ReactTooltip />
     </>
   )
 }

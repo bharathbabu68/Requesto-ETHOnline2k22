@@ -167,7 +167,7 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
 
     {
       !request_id_to_fetch && !activeChat &&
-      <SelectButton style={{textAlign: "right"}} value={currentlySelectedRequestType} options={paymentTypes} onChange={(e) => setCurrentlySelectedRequestType(e.value)} optionLabel="name" />
+      <SelectButton style={{textAlign: "right"}} value={currentlySelectedRequestType} options={paymentTypes} onChange={(e) => {e.value ? setCurrentlySelectedRequestType(e.value):setCurrentlySelectedRequestType(currentlySelectedRequestType)}} optionLabel="name" />
     }
 
     {!showLoadingInboxDialog && !request_id_to_fetch && !activeChat && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <p><br></br>No NFT Requests Received Till Now</p>}
