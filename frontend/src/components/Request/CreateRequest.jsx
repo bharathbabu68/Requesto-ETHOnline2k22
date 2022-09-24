@@ -55,7 +55,7 @@ const CreateRequest = ({provider, signer}) => {
 
 
     const fetchNFTData = async (raddress, chain) => {
-        const response = await fetch(`http://localhost:4000/api/nft/owned/${raddress}/${chain}`,{
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/nft/owned/${raddress}/${chain}`,{
         method: 'GET',
         headers: {
             'Content-Type' : 'application/json'

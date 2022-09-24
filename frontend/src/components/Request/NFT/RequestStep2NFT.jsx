@@ -18,7 +18,7 @@ const RequestStep2NFT = ({nftResponseEthereum, nftResponsePolygon, receiver_addr
   const [imageMetaData, setImageMetaData] = useState()
 
   async function fetchNFTDetails(){
-    const response = await fetch(`http://localhost:4000/api/nft/details/${nftContractAddress}/${nftTokenId}/${chain}`,{
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/nft/details/${nftContractAddress}/${nftTokenId}/${chain}`,{
         method: 'GET',
         headers: {
             'Content-Type' : 'application/json'

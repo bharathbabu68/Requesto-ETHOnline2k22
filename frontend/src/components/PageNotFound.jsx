@@ -18,7 +18,7 @@ const PageNotFound = () => {
       <h3 style={{fontWeight:"bolder", color:"white", paddingTop:"10px"}}>Your page was not found !</h3>
       <div style={{marginTop:"50px"}}>
       <Button onClick = {()=>{
-        window.location.replace("http://localhost:3000/app")
+        window.location.replace(`${process.env.REACT_APP_HOSTED_URL}/app`)
       }} label="Go to App" className="p-button-rounded p-button-sm" />
       </div>
       </div>

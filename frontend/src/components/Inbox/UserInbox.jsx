@@ -6,6 +6,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 import NFTRequestCard from "../Request Card/NFTRequestCard"
 import CryptoRequestCard from "../Request Card/CryptoRequestCard"
 import ChatWindow from "../Chat/ChatWindow";
+import { SelectButton } from 'primereact/selectbutton';
 
 const UserInbox = ({provider, signer, request_id_to_fetch}) => {
 
@@ -17,6 +18,12 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
   const [deleted, setDeleted] = useState(0)
   const [activeChat, setActiveChat] = useState(null)
   const [foundStatus, setFoundStatus] = useState(false)
+
+  const paymentTypes = [
+    {name: 'Crypto Requests', value: "crypto"},
+    {name: 'NFT Requests', value: "nft"},
+    // {name: 'Option 3', value: 3}
+  ];
 
   useEffect(() => {
     getAllUserRequests()
@@ -53,7 +60,7 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
     setShowLoadingInboxDialog(true)
     const userAddress = await signer.getAddress()
     setUserAddressValue(userAddress)
-    const response = await fetch(`http://localhost:4000/api/requests/getReceivedRequests/${userAddress}`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/requests/getReceivedRequests/${userAddress}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -154,12 +161,17 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
     <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"/>
     </Dialog>
 
-    {!request_id_to_fetch && !activeChat && <Button style={{marginRight:"68%"}} label="Toggle between crypto & NFT requests" onClick={async ()=>{
+    {/* {!request_id_to_fetch && !activeChat && <Button style={{marginRight:"68%"}} label="Toggle between crypto & NFT requests" onClick={async ()=>{
         toggleRequestTypes()
-      }} />}
+      }} />} */}
 
-    {!showLoadingInboxDialog && !request_id_to_fetch && !activeChat && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <p>No NFT Requests Received Till Now</p>}
-    {!showLoadingInboxDialog && !request_id_to_fetch  && !activeChat && currentlySelectedRequestType=="crypto" && userCryptoRequests.length==0 && <p>No Crypto Requests Received Till Now</p>}
+    {
+      !request_id_to_fetch && !activeChat &&
+      <SelectButton style={{textAlign: "right"}} value={currentlySelectedRequestType} options={paymentTypes} onChange={(e) => setCurrentlySelectedRequestType(e.value)} optionLabel="name" />
+    }
+
+    {!showLoadingInboxDialog && !request_id_to_fetch && !activeChat && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <p><br></br>No NFT Requests Received Till Now</p>}
+    {!showLoadingInboxDialog && !request_id_to_fetch  && !activeChat && currentlySelectedRequestType=="crypto" && userCryptoRequests.length==0 && <p><br></br>No Crypto Requests Received Till Now</p>}
 
     {!foundStatus && !showLoadingInboxDialog && request_id_to_fetch  && !activeChat && <p>Your request could not be retrieved !</p>}
 
