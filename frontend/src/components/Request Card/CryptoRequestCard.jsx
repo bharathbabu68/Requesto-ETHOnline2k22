@@ -119,7 +119,7 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat, Reload
       return
     }
     var chain_val = currency()
-    const response = await fetch(`http://localhost:4000/api/requests/rejectCryptoRequest`,{
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/requests/rejectCryptoRequest`,{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -151,12 +151,12 @@ const CryptoRequestCard = ({request, provider, signer, address, showChat, Reload
     <Row>
     <Col md={5}>
     <div style={{ overflow:"hidden"}}>
-    <QRCodeCanvas value={`http://localhost:3000/app/request/${request._id}`} />
+    <QRCodeCanvas value={`${process.env.REACT_APP_HOSTED_URL}/app/request/${request._id}`} />
     </div>
     </Col>
     <Col md={7}>
     <p>This payment link can only be accessed and viewed by the receiver of the request by connecting their wallet !</p>
-    <a href={`http://localhost:3000/app/request/${request._id}`}>Payment Link</a>
+    <a href={`${process.env.REACT_APP_HOSTED_URL}/app/request/${request._id}`}>Payment Link</a>
     </Col>
     </Row>
     </Dialog>

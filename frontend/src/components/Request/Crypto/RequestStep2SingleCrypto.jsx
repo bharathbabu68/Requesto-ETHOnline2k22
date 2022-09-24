@@ -5,7 +5,6 @@ import { RadioButton } from 'primereact/radiobutton';
 import { ethers } from 'ethers'
 import { Resolution } from '@unstoppabledomains/resolution';
 import ReactTooltip from 'react-tooltip';
-// const {default: Resolution} = require('@unstoppabledomains/resolution');
 
 
 const RequestStep2SingleCrypto = ({completeStep2SingleRequestCrypto}) => {

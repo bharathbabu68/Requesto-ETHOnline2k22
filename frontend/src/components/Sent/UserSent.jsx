@@ -6,6 +6,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 import NFTRequestCard from "../Request Card/NFTRequestCard"
 import CryptoRequestCard from "../Request Card/CryptoRequestCard"
 import ChatWindow from "../Chat/ChatWindow";
+import { SelectButton } from 'primereact/selectbutton';
 
 const UserSent = ({provider, signer}) => {
 
@@ -15,6 +16,12 @@ const UserSent = ({provider, signer}) => {
   const [currentlySelectedRequestType, setCurrentlySelectedRequestType] = useState("crypto")
   const [userAddressValue, setUserAddressValue] = useState("")
   const [activeChat, setActiveChat] = useState(null)
+
+  const paymentTypes = [
+    {name: 'Crypto Requests', value: "crypto"},
+    {name: 'NFT Requests', value: "nft"},
+    // {name: 'Option 3', value: 3}
+  ];
 
   useEffect(() => {
     getAllUserRequests()
@@ -47,7 +54,7 @@ const UserSent = ({provider, signer}) => {
     setShowLoadingInboxDialog(true)
     const userAddress = await signer.getAddress()
     setUserAddressValue(userAddress)
-    const response = await fetch(`http://localhost:4000/api/requests/getSentRequests/${userAddress}`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/requests/getSentRequests/${userAddress}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -116,13 +123,18 @@ const UserSent = ({provider, signer}) => {
     </Dialog>
 
 
-    {!activeChat && <Button style={{marginRight:"68%"}} label="Toggle between crypto & NFT requests" onClick={async ()=>{
+    {/* {!activeChat && <Button style={{marginRight:"68%"}} label="Toggle between crypto & NFT requests" onClick={async ()=>{
         toggleRequestTypes()
-      }} />}
+      }} />} */}
+
+    {
+      !activeChat &&
+      <SelectButton style={{textAlign: "right"}} value={currentlySelectedRequestType} options={paymentTypes} onChange={(e) => setCurrentlySelectedRequestType(e.value)} optionLabel="name" />
+    }
 
 
-    {!showLoadingInboxDialog  && !activeChat  && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <p>No NFT Requests Sent Till Now</p>}
-    {!showLoadingInboxDialog  && !activeChat  && currentlySelectedRequestType=="crypto" && userCryptoRequests.length==0 && <p>No Crypto Requests Sent Till Now</p>}
+    {!showLoadingInboxDialog  && !activeChat  && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <p><br></br>No NFT Requests Sent Till Now</p>}
+    {!showLoadingInboxDialog  && !activeChat  && currentlySelectedRequestType=="crypto" && userCryptoRequests.length==0 && <p><br></br>No Crypto Requests Sent Till Now</p>}
 
     {/* render NFT requests */}
     {!showLoadingInboxDialog  && !activeChat  && currentlySelectedRequestType=="nft" && userNftRequests.length>0 && userNftRequests.map((request, index) => {

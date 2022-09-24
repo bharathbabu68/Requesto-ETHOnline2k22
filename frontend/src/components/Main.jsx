@@ -3,6 +3,7 @@ import Home from "./Landing Page/Home";
 import DappHome from "./DappHome";
 import PaymentLink from "./PaymentLink";
 import PageNotFound from "./PageNotFound";
+import PaymentSuccess from "./PaymentSuccess";
 
 
 const Main = () => {
@@ -12,6 +13,7 @@ const Main = () => {
         <Switch>
           <Route path="/app/request/:request_id" exact component={({match})=>{  return <PaymentLink request_id_to_fetch={match.params.request_id}/> }} />
           <Route path="/app" exact component={DappHome}/>
+          <Route path="/app/payment-success" exact component={PaymentSuccess}/>
           <Route path="/" exact component={Home}/>
           <Route path="/"  component={PageNotFound}/>
         </Switch>

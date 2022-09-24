@@ -59,7 +59,7 @@ const RequestStep3BroadcastCrypto = ({cryptoReqReceiverAddress, cryptoReqChain, 
           const cid = added.path
           const data_url = (process.env.REACT_APP_IPFS_GATEWAY) + cid
           console.log(data_url)
-          const response = await fetch(`http://localhost:4000/api/requests/createBatchRequests`,{
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/requests/createBatchRequests`,{
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

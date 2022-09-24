@@ -58,7 +58,7 @@ const RequestStep3NFT = ({receiver_address, nftContractAddress, nftTokenId, chai
     const data_url = (process.env.REACT_APP_IPFS_GATEWAY) + cid
     console.log(data_url)
     // send the request to the backend
-    const response = await fetch(`http://localhost:4000/api/requests/createRequest`,{
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/requests/createRequest`,{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
