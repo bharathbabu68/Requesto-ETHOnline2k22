@@ -86,7 +86,7 @@ const createRequest = async (req, res)=>{
                 requestSignature: req.body.requestSignature,
                 requestStatus: "sent"
             })
-            notificationController.sendTargetedNotificationRejectCrypto(req.body.requestSender, req.body.requestReceiver, data_json.chain, data_json.amount)
+            notificationController.sendTargetedNotificationCrypto(req.body.requestSender, req.body.requestReceiver, data_json.chain, data_json.amount)
             await newRequest.save()
             res.send("Payment request sent")
         }
