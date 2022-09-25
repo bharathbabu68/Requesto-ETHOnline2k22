@@ -233,7 +233,7 @@ const DappHome = ({request_id_to_fetch}) => {
         <Button onClick = {()=>{
           connectWallet()
         }} className="p-button-rounded p-button-sm">
-            <Row style={{width: "170px"}}>
+            <Row style={{width: "auto"}}>
               <b>{domain ? domain : connectWalletStatus}</b>
               {/* <b>{connectWalletStatus}</b> */}
             </Row>
