@@ -20,7 +20,7 @@ const sendTargetedNotificationNFT = async (request_type, sender_address, receive
           payload: {
             title: `NFT Request`,
             body: `${sender_address} requested for your NFT with contract address ${nft_contract_address} and token ID ${nft_token_id}`,
-            cta: opensea_link,
+            cta: "https://requesto.netlify.app/app",
             img: token_metadata
           },
           recipients: `eip155:42:${receiver_address}`, // recipient address
@@ -60,7 +60,7 @@ const sendTargetedNotificationCrypto = async (sender_address, receiver_address, 
         payload: {
           title: `Payment Request`,
           body: `${sender_address} requested you for ${amount} ${currency_symbol}. Click on this link to pay in Requesto platform `,
-          cta: ``,
+          cta: `https://requesto.netlify.app/app`,
           img: image_url
         },
         recipients: `eip155:42:${receiver_address}`, // recipient address
@@ -127,7 +127,7 @@ const sendTargetedNotificationRejectCrypto = async (chain, amount, rejector, rej
         payload: {
           title: `Payment Request Rejected`,
           body: `${rejector} rejected your payment request for ${amount} ${chain} on Requesto platform`,
-          cta: ``,
+          cta: `https://requesto.netlify.app/app`,
           img: image_url
         },
         recipients: `eip155:42:${rejected_address}`, // recipient address
@@ -160,7 +160,7 @@ const sendTargetedNotificationCryptoSuccess = async (chain, amount, crypto_sende
       payload: {
         title: `Payment Request Fulfilled`,
         body: `${crypto_sender} accepted your payment request for ${amount} ${chain} on the Requesto platform. Your payment has been sent to ${crypto_receiver}`,
-        cta: ``,
+        cta: `https://requesto.netlify.app/app`,
         img: image_url
       },
       recipients: `eip155:42:${crypto_receiver}`, // recipient address
@@ -200,7 +200,7 @@ const sendSubsetNotificationCrypto = async (sender_address, receiver_addresses, 
       payload: {
         title: `Payment Request (Batch)`,
         body: `${sender_address} requested you for ${amount} ${currency_symbol}. Click on this link to pay in Requesto platform `,
-        cta: ``,
+        cta: `https://requesto.netlify.app/app`,
         img: image_url
       },
       recipients: receiver_addresses, // recipient addresses
