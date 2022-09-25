@@ -146,8 +146,7 @@ const DappHome = ({request_id_to_fetch}) => {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
-          // 'Authorization': `Bearer ${process.env.REACT_APP_UNSTOPPABLE_DOMAIN_API_KEY}`
-          'Authorization': `Bearer ec3711f5-fb89-41c7-9d61-affe946688a6`
+          'Authorization': `Bearer ${process.env.REACT_APP_UNSTOPPABLE_DOMAIN_API_KEY}`
         }
       }
 
