@@ -146,8 +146,7 @@ const DappHome = ({request_id_to_fetch}) => {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
-          // 'Authorization': `Bearer ${process.env.REACT_APP_UNSTOPPABLE_DOMAIN_API_KEY}`
-          'Authorization': `Bearer ec3711f5-fb89-41c7-9d61-affe946688a6`
+          'Authorization': `Bearer ${process.env.REACT_APP_UNSTOPPABLE_DOMAIN_API_KEY}`
         }
       }
 
@@ -164,27 +163,6 @@ const DappHome = ({request_id_to_fetch}) => {
         setDomain(data);
       }
 
-      
-      /////////////////////////////////////
-      // Wallet Provider from LOCALstorage
-      ////////////////////////////////////
-
-      // var wProvider;
-      // for(let i=0; i<50;i++){
-      //   wProvider = localStorage.getItem("WEB3_CONNECT_CACHED_PROVIDER").replaceAll('"', '')
-      // }
-      // console.log(wProvider)
-      // var wallet;
-      // if(wProvider.localeCompare('custom-uauth'))
-      //   wallet = "Unstoppable Domain Connected"
-      // else if(wProvider.localeCompare('injected'))
-      //   wallet = "Metamask Connected"
-      // else
-      //   wallet = "Wallet Connected"
-      // var wallet = wProvider.localeCompare("custom-uauth") ? "Unstoppable Domain Connected" : 
-      //             wProvider === "injected" ? "Metamask Connected" : "Wallet Connected";
-      // console.log(wallet)
-      // setWalletProvider(wallet)
       setProvider(provider)
       setSigner(_signer)
       setAddress(account)
