@@ -133,8 +133,8 @@ const UserSent = ({provider, signer}) => {
     }
 
 
-    {!showLoadingInboxDialog  && !activeChat  && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <p><br></br>No NFT Requests Sent Till Now</p>}
-    {!showLoadingInboxDialog  && !activeChat  && currentlySelectedRequestType=="crypto" && userCryptoRequests.length==0 && <p><br></br>No Crypto Requests Sent Till Now</p>}
+    {!showLoadingInboxDialog  && !activeChat  && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <h3 style={{fontFamily:"Raleway", marginTop:"10%"}}><br></br>No NFT Requests Sent Till Now. <br/>Create your first NFT Request in 3 Steps !</h3>}
+    {!showLoadingInboxDialog  && !activeChat  && currentlySelectedRequestType=="crypto" && userCryptoRequests.length==0 && <h3 style={{fontFamily:"Raleway", marginTop:"10%"}}><br></br>No Crypto Requests Sent Till Now. <br/>Create your first Crypto Request in 3 Steps !</h3>}
 
     {/* render NFT requests */}
     {!showLoadingInboxDialog  && !activeChat  && currentlySelectedRequestType=="nft" && userNftRequests.length>0 && userNftRequests.map((request, index) => {

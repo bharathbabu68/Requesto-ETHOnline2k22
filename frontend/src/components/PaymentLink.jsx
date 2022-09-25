@@ -145,7 +145,7 @@ const PaymentLink = ({request_id_to_fetch}) => {
         <Col md={10}>
             <Row>
             <Col md={2}>
-            <h3 onClick={() => window.location.href = `${process.env.REACT_APP_HOSTED_URL}/app`} style={{fontWeight:"bold", color:"white", paddingTop:"10px", color:"white", cursor:"pointer"}}>Requesto</h3>
+            <h3 onClick={() => window.location.href = `${process.env.REACT_APP_HOSTED_URL}`} style={{fontWeight:"bold", color:"white", paddingTop:"10px", color:"white", cursor:"pointer"}}>Requesto</h3>
             </Col>
             <Col md={10} style={{paddingTop:"10px", textAlign:"left"}}>
                 <Row>

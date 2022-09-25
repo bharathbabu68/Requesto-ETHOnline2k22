@@ -170,8 +170,8 @@ const UserInbox = ({provider, signer, request_id_to_fetch}) => {
       <SelectButton style={{textAlign: "right"}} value={currentlySelectedRequestType} options={paymentTypes} onChange={(e) => {e.value ? setCurrentlySelectedRequestType(e.value):setCurrentlySelectedRequestType(currentlySelectedRequestType)}} optionLabel="name" />
     }
 
-    {!showLoadingInboxDialog && !request_id_to_fetch && !activeChat && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <p><br></br>No NFT Requests Received Till Now</p>}
-    {!showLoadingInboxDialog && !request_id_to_fetch  && !activeChat && currentlySelectedRequestType=="crypto" && userCryptoRequests.length==0 && <p><br></br>No Crypto Requests Received Till Now</p>}
+    {!showLoadingInboxDialog && !request_id_to_fetch && !activeChat && currentlySelectedRequestType=="nft" && userNftRequests.length==0 && <h3 style={{fontFamily:"Raleway", marginTop:"10%"}}><br></br>No NFT Requests Received Till Now</h3>}
+    {!showLoadingInboxDialog && !request_id_to_fetch  && !activeChat && currentlySelectedRequestType=="crypto" && userCryptoRequests.length==0 && <h3 style={{fontFamily:"Raleway", marginTop:"10%"}}><br></br>No Crypto Requests Received Till Now</h3>}
 
     {!foundStatus && !showLoadingInboxDialog && request_id_to_fetch  && !activeChat && <p>Your request could not be retrieved !</p>}
 
