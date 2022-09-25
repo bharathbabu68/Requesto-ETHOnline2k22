@@ -142,11 +142,27 @@ const DappHome = ({request_id_to_fetch}) => {
       // Uncomment after getting API keys
       ///////////////////////////////////
 
-      // var res = fetch(`https://resolve.unstoppabledomains.com/reverse/${account}`)
-      // res.then( (domain) => {
-      //   console.log(domain)
-      //   setDomain(domain)
-      // } ).catch((err) => console.log(err))
+      const UDoptions = {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          // 'Authorization': `Bearer ${process.env.REACT_APP_UNSTOPPABLE_DOMAIN_API_KEY}`
+          'Authorization': `Bearer ec3711f5-fb89-41c7-9d61-affe946688a6`
+        }
+      }
+
+      var res = await fetch(`https://resolve.unstoppabledomains.com/reverse/${account}`, UDoptions)
+      var data = await res.json()
+
+      console.log(data);
+      setDomain(data.meta.domain);
+
+      if(!data.meta.domain) {
+        const ensReverseLookupProvider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_INFURA_ETHEREUM_ENDPOINT);
+        data = await ensReverseLookupProvider.lookupAddress(account);
+        console.log(data);
+        setDomain(data);
+      }
 
       
       /////////////////////////////////////
@@ -240,8 +256,8 @@ const DappHome = ({request_id_to_fetch}) => {
           connectWallet()
         }} className="p-button-rounded p-button-sm">
             <Row style={{width: "170px"}}>
-              <b>{connectWalletStatus}</b>
-              <i style={{fontSize: "10px"}}>{domain}</i>
+              <b>{domain ? domain : connectWalletStatus}</b>
+              {/* <b>{connectWalletStatus}</b> */}
             </Row>
           </Button>
       </Col>

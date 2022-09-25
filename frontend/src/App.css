@@ -218,7 +218,7 @@ h3 {
 }
 .close:hover,
 .close:focus {
-  box-shadow: inset -3.5em 0 0 0 var(--hover), inset 3.5em 0 0 0 var(--hover);
+  box-shadow: inset -4.9em 0 0 0 var(--hover), inset 4.9em 0 0 0 var(--hover);
 }
 
 .raise:hover,
@@ -234,7 +234,7 @@ h3 {
 
 .slide:hover,
 .slide:focus {
-  box-shadow: inset 6.5em 0 0 0 var(--hover);
+  box-shadow: inset 10em 0 0 0 var(--hover);
 }
 
 .offset {
@@ -256,7 +256,7 @@ h3 {
 
 .close {
   --color: #ff7f82;
-  --hover: #ffdc7f;
+  --hover: #ffdd7f94;
 }
 
 .raise {
