@@ -25,6 +25,11 @@ const DappHome = ({request_id_to_fetch}) => {
         setSentButtonBorder("none")
         setCreateRequestButtonBorder("none")
       }
+      window.ethereum.on('accountsChanged', function (accounts) {
+        setConnectWalletStatus("Connect Wallet")
+        setProvider(null)
+        setSigner(null)
+      })
     }, [])
 
 

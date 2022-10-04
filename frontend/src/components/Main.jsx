@@ -15,8 +15,8 @@ const Main = () => {
         <BrowserView>
           <Route path="/app/request/:request_id" exact component={({match})=>{  return <PaymentLink request_id_to_fetch={match.params.request_id}/> }} />
           <Route path="/app" exact component={DappHome}/>
-          <Route path="/"  component={PageNotFound}/>  
           </BrowserView>        
+          <Route path="/"  component={PageNotFound}/>  
         </Switch>
     </BrowserRouter>
     </>
